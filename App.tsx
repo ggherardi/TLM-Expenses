@@ -14,7 +14,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { Constants } from './src/lib/Constants';
-import LoginScreen from './src/Screens/LoginScreen';
+import LoginScreen from './src/screens/LoginScreen';
 import { ThemeColors } from './src/lib/GlobalStyles';
 
 const Stack = createNativeStackNavigator();

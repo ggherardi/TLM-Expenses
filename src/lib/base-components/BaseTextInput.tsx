@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TextInput, TextInputProps } from 'react-native';
-import { ThemeColors } from '../lib/GlobalStyles';
+import { ThemeColors } from '../GlobalStyles';
 
 type Props = TextInputProps & {
   hasError?: boolean;

@@ -94,7 +94,7 @@ const LoginScreen = ({ navigation }: any) => {
       if (userProfile && userProfile.name && userProfile.surname) {
         console.log("Logging in..");
         setIsLoading(true);
-        Utility.ShowSuccessMessage(`Bentornato, ${userProfile.name}`);
+        // Utility.ShowSuccessMessage(`Bentornato, ${userProfile.name}`);
         navigation.replace(Constants.Navigation.Home);
         setIsLoading(false);
       }
@@ -115,7 +115,7 @@ const LoginScreen = ({ navigation }: any) => {
     profile.surname = surname ? surname.trim() : '';
     profile.email = email ? email.trim() : 'nota-spese@tourleadermanagement.ch';
     dataContext.UserProfile.saveData([profile]);
-    Utility.ShowSuccessMessage(`Bentornato, ${profile.name}`);
+    // Utility.ShowSuccessMessage(`Bentornato, ${profile.name}`);
     navigation.replace(Constants.Navigation.Home);
     setIsLoading(false);
     setIsDisabled(false);

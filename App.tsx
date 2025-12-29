@@ -25,15 +25,15 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName={Constants.Navigation.LoginScreen}>
           <Stack.Screen name={Constants.Navigation.LoginScreen} component={LoginScreen} options={loginScreenOptions} />
-          {/* <Stack.Screen name={Constants.Navigation.Home} component={HomeScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.AllEvents} component={AllEventsScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.NewEvent} component={NewEventScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.EventHome} component={EventHomeScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.ViewPdf} component={ViewPdfScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.EditEventScreen} component={EditEventScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.RefundKmScreen} component={RefundKmScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.NewExpenseReport} component={NewExpenseReportScreen} options={commonOptions} />
-          <Stack.Screen name={Constants.Navigation.UpdateApp} component={UpdateApp} options={commonOptions} /> */}
+          <Stack.Screen name={Constants.Navigation.Home} component={HomeScreen} options={commonOptions} />
+          {/* <Stack.Screen name={Constants.Navigation.AllEvents} component={AllEventsScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.NewEvent} component={NewEventScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.EventHome} component={EventHomeScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.ViewPdf} component={ViewPdfScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.EditEventScreen} component={EditEventScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.RefundKmScreen} component={RefundKmScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.NewExpenseReport} component={NewExpenseReportScreen} options={commonOptions} /> */}
+          {/* <Stack.Screen name={Constants.Navigation.UpdateApp} component={UpdateApp} options={commonOptions} /> */}
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />

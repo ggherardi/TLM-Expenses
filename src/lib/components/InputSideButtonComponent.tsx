@@ -1,11 +1,12 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import BaseIcon, { IconName } from '../base-components/BaseIcon';
 import GlobalStyles, { ThemeColors } from '../GlobalStyles';
 import { Utility } from '../Utility';
 
 interface IInputSideButtonProps {
   pressFunction: Function;
-  icon: IconProp | undefined;
+  icon: IconName | undefined;
   iconColor?: string;
   iconStyle?: any;
   stretchHeight?: boolean;
@@ -29,7 +30,7 @@ export const InputSideButton = ({ pressFunction, icon, iconColor = ThemeColors.p
           <Text style={{ color: isDisabled ? ThemeColors.inactive : ThemeColors.white, fontSize: fontSize, paddingBottom: 5, alignSelf: 'center', textAlign: 'center' }}>{text}</Text>
         )}
         {icon ? (
-          <FontAwesomeIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { alignSelf: 'center', color: isDisabled ? ThemeColors.inactive : iconColor }]} icon={icon} size={size ? size : 20} />
+          <BaseIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { alignSelf: 'center' }]} name={icon} size={size ? size : 20} color={isDisabled ? ThemeColors.inactive : iconColor} />
         ) : (<></>)
         }
       </View>
@@ -40,7 +41,7 @@ export const InputSideButton = ({ pressFunction, icon, iconColor = ThemeColors.p
           <Text style={{ color: isDisabled ? ThemeColors.inactive : ThemeColors.white, fontSize: fontSize }}>{text}</Text>
         )}
         {icon ? (
-          <FontAwesomeIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { color: isDisabled ? ThemeColors.inactive : iconColor }]} icon={icon} size={size ? size : 20} />
+          <BaseIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary]} name={icon} size={size ? size : 20} color={isDisabled ? ThemeColors.inactive : iconColor} />
         ) : (<></>)
         }
       </View>
@@ -51,7 +52,7 @@ export const InputSideButton = ({ pressFunction, icon, iconColor = ThemeColors.p
           <Text style={{ color: isDisabled ? ThemeColors.inactive : ThemeColors.white, fontSize: fontSize }}>{text}</Text>
         )}
         {icon ? (
-          <FontAwesomeIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { color: isDisabled ? ThemeColors.inactive : iconColor }]} icon={icon} size={size ? size : 20} />
+          <BaseIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary]} name={icon} size={size ? size : 20} color={isDisabled ? ThemeColors.inactive : iconColor} />
         ) : (<></>)
         }
       </View>
@@ -59,7 +60,7 @@ export const InputSideButton = ({ pressFunction, icon, iconColor = ThemeColors.p
     {textPosition == 'bottom' && (
       <View>        
         {icon ? (
-          <FontAwesomeIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { alignSelf: 'center', color: isDisabled ? ThemeColors.inactive : iconColor }]} icon={icon} size={size ? size : 20} />
+          <BaseIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { alignSelf: 'center' }]} name={icon} size={size ? size : 20} color={isDisabled ? ThemeColors.inactive : iconColor} />
         ) : (<></>)}
         {Utility.IsNotNullOrUndefined(text) && (
           <Text style={{ color: isDisabled ? ThemeColors.inactive : ThemeColors.white, fontSize: fontSize, paddingTop: 5, alignSelf: 'center', textAlign: 'center' }}>{text}</Text>

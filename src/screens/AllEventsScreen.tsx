@@ -9,13 +9,11 @@ import dataContext from '../lib/models/DataContext';
 import useCustomHeader from '../lib/components/CustomHeaderComponent';
 import { Storage } from '../lib/DataStorage';
 import NavigationHelper from '../lib/NavigationHelper';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Images } from '../assets/Images';
-import { InputSideButton } from '../lib/components/InputSideButtonComponent';
 import { LinkHelper } from '../lib/Linking';
-import { faTelegram, faWhatsapp, faWhatsappSquare } from '@fortawesome/free-brands-svg-icons';
 import NotificationManager from '../lib/NotificationManager';
 import { FileManager } from '../lib/FileManager';
+import BaseIcon from '../lib/base-components/BaseIcon';
 
 const AllEventsScreen = ({ navigation, route }: any) => {
   const [events, setEvents] = useState(dataContext.Events.getAllData());
@@ -81,7 +79,7 @@ const AllEventsScreen = ({ navigation, route }: any) => {
           </View>
           <View style={{ justifyContent: 'flex-end' }}>
             <Text style={[styles.text]}>Crea un nuovo evento</Text>
-            <FontAwesomeIcon icon={'arrow-down-long'} size={20} color={"gray"} style={{ alignSelf: 'center', marginVertical: 10 }} />
+            <BaseIcon name={'arrow-down-long'} size={20} color={"gray"} style={{ alignSelf: 'center', marginVertical: 10 }} />
           </View>
         </Context.Provider>
       )}

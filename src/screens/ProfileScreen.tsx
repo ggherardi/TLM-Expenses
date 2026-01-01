@@ -1,12 +1,12 @@
-import { FormControl, Input, NativeBaseProvider, ScrollView } from '@gluestack-ui/themed-native-base';
-import React, { Keyboard, StyleSheet } from 'react-native';
-import GlobalStyles from '../lib/GlobalStyles';
+import React, { useEffect, useState } from 'react';
+import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
+import GlobalStyles, { ThemeColors } from '../lib/GlobalStyles';
 import { Utility } from '../lib/Utility';
 import { useCustomHeaderWithButtonAsync } from '../lib/components/CustomHeaderComponent';
 import { UserProfile } from '../lib/models/UserProfile';
-import { useEffect, useState } from 'react';
 import dataContext from '../lib/models/DataContext';
 import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageComponent';
+import BaseTextInput from '../lib/base-components/BaseTextInput';
 
 const ProfileScreen = ({ navigation, route }: any) => {
     const [userProfile, setUserProfile] = useState<UserProfile>(Utility.GetUserProfile());
@@ -60,39 +60,56 @@ const ProfileScreen = ({ navigation, route }: any) => {
     Utility.OnFocus({ navigation: navigation, onFocusAction: () => refreshData() });
 
     return (
-        <NativeBaseProvider>
-            <ScrollView contentContainerStyle={[GlobalStyles.container]}>
-                <FormControl style={GlobalStyles.mt15} isRequired isInvalid={"name" in validationErrors}>
-                    <FormControl.Label>Nome</FormControl.Label>
-                    <Input defaultValue={name} placeholder="es. Mario" onChange={setName}></Input>
-                    <FormErrorMessageComponent text='Campo obbligatorio' field='name' validationArray={validationErrors} />
-                </FormControl>
-                <FormControl style={GlobalStyles.mt15} isRequired isInvalid={"surname" in validationErrors}>
-                    <FormControl.Label>Cognome</FormControl.Label>
-                    <Input defaultValue={surname} placeholder="es. Rossi" onChange={setSurname}></Input>
-                    <FormErrorMessageComponent text='Campo obbligatorio' field='surname' validationArray={validationErrors} />
-                </FormControl>
-                <FormControl style={GlobalStyles.mt15} isRequired isInvalid={"email" in validationErrors}>
-                    <FormControl.Label>Email azienda (per invio nota spesa)</FormControl.Label>
-                    <Input keyboardType='email-address' defaultValue={email} placeholder="es. tl@gmail.com" onChange={setEmail}></Input>
-                    <FormErrorMessageComponent text='Campo obbligatorio' field='email' validationArray={validationErrors} />
-                </FormControl>
-            </ScrollView>
-        </NativeBaseProvider>
+        <ScrollView contentContainerStyle={[GlobalStyles.container, styles.form]}>
+            <View style={styles.field}>
+                <Text style={styles.label}>Nome</Text>
+                <BaseTextInput
+                    value={name}
+                    placeholder="es. Mario"
+                    onChangeText={setName}
+                    hasError={"name" in validationErrors}
+                />
+                <FormErrorMessageComponent text='Campo obbligatorio' field='name' validationArray={validationErrors} />
+            </View>
+            <View style={styles.field}>
+                <Text style={styles.label}>Cognome</Text>
+                <BaseTextInput
+                    value={surname}
+                    placeholder="es. Rossi"
+                    onChangeText={setSurname}
+                    hasError={"surname" in validationErrors}
+                />
+                <FormErrorMessageComponent text='Campo obbligatorio' field='surname' validationArray={validationErrors} />
+            </View>
+            <View style={styles.field}>
+                <Text style={styles.label}>Email azienda (per invio nota spesa)</Text>
+                <BaseTextInput
+                    value={email}
+                    placeholder="es. tl@gmail.com"
+                    keyboardType='email-address'
+                    autoCapitalize='none'
+                    onChangeText={setEmail}
+                    hasError={"email" in validationErrors}
+                />
+                <FormErrorMessageComponent text='Campo obbligatorio' field='email' validationArray={validationErrors} />
+            </View>
+        </ScrollView>
     )
 };
 
 const styles = StyleSheet.create({
-    section: {
-        paddingBottom: 15
+    form: {
+        paddingVertical: 10,
     },
-    caption: {
-        fontSize: 15,
-        fontWeight: 'bold'
+    field: {
+        marginTop: 15,
     },
-    text: {
-        fontSize: 15
-    }
+    label: {
+        fontSize: 14,
+        fontWeight: '600',
+        marginBottom: 6,
+        color: ThemeColors.black,
+    },
 });
 
 export default ProfileScreen;

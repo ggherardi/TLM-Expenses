@@ -210,21 +210,21 @@ export const Utility = {
     return value != undefined && value != null && value != '';
   },
 
-  // ShowSuccessMessage: (text: string) => {
-  //   showMessage({
-  //     message: text,
-  //     icon: (props: any) => <FontAwesomeIcon icon='check-circle' color={ThemeColors.white} size={20} style={{ marginRight: 10 }} />,
-  //     type: 'success'
-  //   })
-  // },
+  ShowSuccessMessage: (text: string) => {
+    // showMessage({
+    //   message: text,
+    //   icon: (props: any) => <FontAwesomeIcon icon='check-circle' color={ThemeColors.white} size={20} style={{ marginRight: 10 }} />,
+    //   type: 'success'
+    // })
+  },
 
-  // ShowFailureMessage: (text: string) => {
-  //   showMessage({
-  //     message: text,
-  //     icon: (props: any) => <FontAwesomeIcon icon='xmark-circle' color={ThemeColors.white} size={20} style={{ marginRight: 10 }} />,
-  //     type: 'danger'
-  //   })
-  // },
+  ShowFailureMessage: (text: string) => {
+    // showMessage({
+    //   message: text,
+    //   icon: (props: any) => <FontAwesomeIcon icon='xmark-circle' color={ThemeColors.white} size={20} style={{ marginRight: 10 }} />,
+    //   type: 'danger'
+    // })
+  },
 
   SwipableHint: (swipableRef: any) => {
     swipableRef.current?.openRight();

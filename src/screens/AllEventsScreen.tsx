@@ -1,4 +1,3 @@
-import { Input, NativeBaseProvider } from '@gluestack-ui/themed-native-base';
 import React, { useState, useEffect } from 'react';
 import { Text, ScrollView, Alert, View, StyleSheet, Dimensions, Image, Pressable } from 'react-native';
 import GlobalStyles from '../lib/GlobalStyles';
@@ -10,9 +9,6 @@ import useCustomHeader from '../lib/components/CustomHeaderComponent';
 import { Storage } from '../lib/DataStorage';
 import NavigationHelper from '../lib/NavigationHelper';
 import { Images } from '../assets/Images';
-import { LinkHelper } from '../lib/Linking';
-import NotificationManager from '../lib/NotificationManager';
-import { FileManager } from '../lib/FileManager';
 import BaseIcon from '../lib/base-components/BaseIcon';
 
 const AllEventsScreen = ({ navigation, route }: any) => {

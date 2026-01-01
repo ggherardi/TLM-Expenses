@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Pressable, StyleSheet, Text, Alert, View, I18nManager } from 'react-native';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { BusinessEvent } from '../models/BusinessEvent';
-import { Pressable, StyleSheet, Text, Alert, Animated, View, Button, I18nManager } from 'react-native';
 import { Utility } from '../Utility';
-import { GestureHandlerRootView, RectButton, Swipeable } from 'react-native-gesture-handler';
 import dataContext from '../models/DataContext';
 import { ThemeColors } from '../GlobalStyles';
 import { Constants } from '../Constants';
-import DataContext from '../models/DataContext';
 import { ExpenseReport } from '../models/ExpenseReport';
 import { StatusTextComponent } from './StatusTextComponent';
 import { renderRightAction } from './SwipableActionsComponent';
@@ -17,6 +16,14 @@ interface IHomeDataRow {
     index: number;
     navigation: any;
 }
+
+const Row = ({ children }: { children: React.ReactNode }) => (
+    <View style={styles.row}>{children}</View>
+);
+
+const VStack = ({ children, style }: { children: React.ReactNode; style?: any }) => (
+    <View style={[styles.column, style]}>{children}</View>
+);
 
 export const HomeDataRowComponent = ({ event, onDelete, index, navigation }: IHomeDataRow) => {
     const [expenses, setExpenses] = useState<ExpenseReport[]>(Utility.GetExpensesForEvent(event));
@@ -81,7 +88,7 @@ export const HomeDataRowComponent = ({ event, onDelete, index, navigation }: IHo
     const deleteEvent = (swipableRef: any) => {
         const onDeleteConfirm = () => {
             dataContext.Events.deleteWhere(event.id);
-            DataContext.deleteEntryWithKey(event.expensesDataContextKey);
+            dataContext.deleteEntryWithKey(event.expensesDataContextKey);
             onDelete();
             Utility.ShowSuccessMessage("Evento cancellato correttamente");
             swipableRef?.current?.close();
@@ -204,5 +211,13 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         backgroundColor: 'transparent',        
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    column: {
+        flexDirection: 'column',
     },
 });

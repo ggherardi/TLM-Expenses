@@ -9,6 +9,7 @@ import {
   CircleCheck,
   CircleX,
   Cog,
+  CornerUpLeft,
   FolderPlus,
   FolderTree,
   Hourglass,
@@ -49,7 +50,8 @@ export type IconName =
   | 'close'
   | 'cancel'
   | 'save'
-  | 'floppy-disk';
+  | 'floppy-disk'
+  | 'arrow-rotate-left';
 
 type Props = {
   name: IconName;
@@ -86,6 +88,7 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   cancel: X,
   save: Save,
   'floppy-disk': Save,
+  'arrow-rotate-left': CornerUpLeft,
 };
 
 const BaseIcon = ({

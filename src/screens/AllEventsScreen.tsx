@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, ScrollView, Alert, View, StyleSheet, Dimensions, Image, Pressable } from 'react-native';
+import { Text, ScrollView, Alert, View, StyleSheet, Dimensions, Image } from 'react-native';
 import GlobalStyles from '../lib/GlobalStyles';
 import { BusinessEvent } from '../lib/models/BusinessEvent';
 import { HomeDataRowComponent } from '../lib/components/HomeDataRowComponent';
@@ -24,11 +24,11 @@ const AllEventsScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     useCustomHeader(navigation.getParent(), "Tutti gli eventi");
-  });
+  }, [navigation]);
 
   useEffect(() => {
     NavigationHelper.setHomeTabNavigation(navigation);
-  }, []);
+  }, [navigation]);
   const refreshData = () => setEvents(dataContext.Events.getAllData());
   const deleteAll = () => {
     const onDeleteConfirm = () => {
@@ -41,28 +41,14 @@ const AllEventsScreen = ({ navigation, route }: any) => {
     ]);
   };
 
-  const goToDebug = () => {
-    navigation.navigate()
-  }
-
   Utility.OnFocus({ navigation: navigation, onFocusAction: refreshData });
   return (
-    <NativeBaseProvider>
+    <>
       {events && events.length ? (
         <ScrollView contentContainerStyle={[GlobalStyles.container]}>
-          {/* <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Text style={{ paddingBottom: 10, paddingLeft: 10, fontSize: 13, alignSelf: 'center', verticalAlign: 'middle', fontWeight: 'bold' }}>Se non hai sostenuto spese, avvisa comunque TLM</Text>
-            <View>
-              <InputSideButton icon={faWhatsapp} iconColor='#25D366' pressFunction={() => LinkHelper.OpenWhatsapp()} />
-            </View>
-          </View> */}
-          <View>
-              {/* <InputSideButton icon={faTelegram} text='Get notifications' pressFunction={() => FileManager.ls(events[0].directoryPath.substring(0, events[0].directoryPath.lastIndexOf("/")))}></InputSideButton> */}
-              {/* <InputSideButton icon={faTelegram} text='Get notifications' pressFunction={() => FileManager.ls("/var/mobile/Containers/Data/Application/CD9D71E4-B66E-4ABD-8EB8-D87C732ED8DA/Documents/Evento_31-07-2024_31-08-2024_411034f4928e421c8842e60bf2fb1d40/")}></InputSideButton> */}
-              {/* <InputSideButton icon={faWhatsappSquare} text='Delete notifications' pressFunction={() => console.log(NotificationManager.cancelAllScheduledNotifications(["1000001", "1000002"]))}></InputSideButton> */}
-            </View>
-          {events != undefined && events.length > 0 && events.map((event: BusinessEvent, index: number) => (
-            <View key={Utility.GenerateRandomGuid()}>
+          {/* se si vuole riattivare il quick action per messaggi, usare InputSideButton con le nuove icone BaseIcon */}
+          {events.map((event: BusinessEvent, index: number) => (
+            <View key={`event_${index}_${event.guid || Utility.GenerateRandomGuid()}`}>
               <HomeDataRowComponent key={`homedatarow_${index}`} event={event} onDelete={refreshData} navigation={navigation} index={index} />
             </View>
           ))}
@@ -79,7 +65,7 @@ const AllEventsScreen = ({ navigation, route }: any) => {
           </View>
         </Context.Provider>
       )}
-    </NativeBaseProvider>
+    </>
   );
 };
 

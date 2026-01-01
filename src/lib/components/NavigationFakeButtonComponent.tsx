@@ -1,10 +1,11 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import BaseIcon, { IconName } from '../base-components/BaseIcon';
 import GlobalStyles, { ThemeColors } from '../GlobalStyles';
 
 interface INavigationFakeButtonProps {
   pressFunction: Function;
-  icon: IconProp;
+  icon: IconName;
   iconColor?: string;
   iconStyle?: any;
   stretchHeight?: boolean;
@@ -12,12 +13,17 @@ interface INavigationFakeButtonProps {
   isDisabled?: boolean;
 }
 
-export const NavigationFakeButtonComponent = ({ pressFunction, icon, iconColor = ThemeColors.primary, iconStyle, stretchHeight, size, isDisabled = false }: INavigationFakeButtonProps) => (
+export const NavigationFakeButtonComponent = ({ pressFunction, icon, iconColor = ThemeColors.white, iconStyle, stretchHeight, size, isDisabled = false }: INavigationFakeButtonProps) => (
   <Pressable onPress={() => pressFunction()} style={({ pressed }) => [{
     opacity: pressed ? 0.2 : 1,
   }, styles.btnBox]} disabled={isDisabled}>
     <View style={[GlobalStyles.flexRow, styles.button]}>
-      <FontAwesomeIcon style={[iconStyle ? iconStyle : GlobalStyles.iconPrimary, { color: isDisabled ? 'gray' : ThemeColors.white }]} icon={icon} size={size ? size : 20} />
+      <BaseIcon
+        style={iconStyle ? iconStyle : GlobalStyles.iconPrimary}
+        name={icon}
+        size={size ? size : 20}
+        color={isDisabled ? 'gray' : iconColor}
+      />
     </View>
   </Pressable>);
 

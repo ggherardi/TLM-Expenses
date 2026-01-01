@@ -1,4 +1,4 @@
-import React from 'react-native';
+import React, { useEffect } from 'react';
 import { BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Constants } from '../lib/Constants';
 import { ThemeColors } from '../lib/GlobalStyles';
@@ -6,10 +6,10 @@ import AllEventsScreen from './AllEventsScreen';
 import ProfileScreen from './ProfileScreen';
 import PlaceholderScreen from './PlaceholderScreen';
 import { NavigationFakeButtonComponent } from '../lib/components/NavigationFakeButtonComponent';
-import { useEffect } from 'react';
 import NavigationHelper from '../lib/NavigationHelper';
 import { FileManager } from '../lib/FileManager';
 import { Utility } from '../lib/Utility';
+import BaseIcon, { IconName } from '../lib/base-components/BaseIcon';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,22 +47,22 @@ const HomeScreen = ({ navigation, route }: any) => {
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
-                    let tabIcon: IconProp = "trash";
+                    let tabIcon: IconName = 'folder-tree';
                     switch (route.name) {
                         case Constants.Navigation.AllEvents:
-                            tabIcon = "folder-tree"
+                            tabIcon = 'folder-tree';
                             break;
                         case Constants.Navigation.UserProfile:
-                            tabIcon = "user";
+                            tabIcon = 'user';
                             break;
                     }
-                    return <FontAwesomeIcon icon={tabIcon} color={focused ? ThemeColors.primary : ThemeColors.inactive} />
+                    return <BaseIcon name={tabIcon} color={focused ? ThemeColors.primary : ThemeColors.inactive} />;
                 },
                 tabBarActiveTintColor: ThemeColors.primary,
                 tabBarInactiveTintColor: 'gray',
             })}>
             <Tab.Screen
-                name={"Tutti gli eventi"}
+                name={Constants.Navigation.AllEvents}
                 component={AllEventsScreen}
                 options={commonTabOptions}></Tab.Screen>
             <Tab.Screen

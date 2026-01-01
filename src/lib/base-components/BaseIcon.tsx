@@ -22,7 +22,7 @@ import {
 } from 'lucide-react-native';
 import { ThemeColors } from '../../lib/GlobalStyles';
 
-type IconName =
+export type IconName =
   | 'info'
   | 'arrow-down-long'
   | 'plus'

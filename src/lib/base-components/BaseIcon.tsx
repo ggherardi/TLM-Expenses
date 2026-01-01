@@ -15,6 +15,7 @@ import {
   Info,
   Plus,
   Search,
+  Save,
   Table,
   Trash2,
   User,
@@ -46,7 +47,9 @@ export type IconName =
   | 'keyboard-arrow-up'
   | 'keyboard-arrow-down'
   | 'close'
-  | 'cancel';
+  | 'cancel'
+  | 'save'
+  | 'floppy-disk';
 
 type Props = {
   name: IconName;
@@ -81,6 +84,8 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   'keyboard-arrow-down': ChevronDown,
   close: X,
   cancel: X,
+  save: Save,
+  'floppy-disk': Save,
 };
 
 const BaseIcon = ({

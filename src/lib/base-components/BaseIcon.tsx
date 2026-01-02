@@ -12,6 +12,9 @@ import {
   Cog,
   CornerUpLeft,
   Edit3,
+  Camera,
+  Images,
+  CarFront,
   FileText,
   FolderPlus,
   FolderTree,
@@ -57,7 +60,10 @@ export type IconName =
   | 'arrow-rotate-left'
   | 'calendar-day'
   | 'pencil'
-  | 'file-pdf';
+  | 'file-pdf'
+  | 'camera'
+  | 'image'
+  | 'car';
 
 type Props = {
   name: IconName;
@@ -98,6 +104,9 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   'calendar-day': CalendarDays,
   pencil: Edit3,
   'file-pdf': FileText,
+  camera: Camera,
+  image: Images,
+  car: CarFront,
 };
 
 const BaseIcon = ({

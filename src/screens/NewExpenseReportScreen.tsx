@@ -1,49 +1,49 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { FormControl, HStack, Input, NativeBaseProvider, TextArea } from '@gluestack-ui/themed-native-base';
-import { useEffect, useRef, useState } from 'react';
-import React, { Alert, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import GlobalStyles, { ThemeColors } from '../lib/GlobalStyles';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ThemeColors } from '../lib/GlobalStyles';
 import { Utility } from '../lib/Utility';
 import { InputSideButton } from '../lib/components/InputSideButtonComponent';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { ExpenseReport } from '../lib/models/ExpenseReport';
 import dataContext from '../lib/models/DataContext';
 import { InputNumber } from '../lib/components/InputNumberComponent';
 import { BusinessEvent } from '../lib/models/BusinessEvent';
-import { Currency } from '../lib/data/Currencies';
 import { Constants } from '../lib/Constants';
 import { useCustomHeaderWithButtonAsync } from '../lib/components/CustomHeaderComponent';
 import { FileManager } from '../lib/FileManager';
-import { PDFBuilder } from '../lib/PDFBuilder';
-import NavigationHelper from '../lib/NavigationHelper';
 import ModalLoaderComponent from '../lib/components/ModalWithLoader';
 import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageComponent';
 import DocumentScanner, { ResponseType } from 'react-native-document-scanner-plugin'
 import MlkitOcr from 'react-native-mlkit-ocr';
+import BaseTextInput from '../lib/base-components/BaseTextInput';
 const NewExpenseReportScreen = ({ route, navigation }: any) => {
     const [expenses, setExpenses] = useState(dataContext.ExpenseReports.getAllData())
     const [expenseName, setExpenseName] = useState('');
     const [expenseDescription, setExpenseDescription] = useState('');
     const [expenseDate, setExpenseDate] = useState<Date | undefined>(new Date());
-    const [expenseAmount, setExpenseAmount] = useState('');
+    const [expenseAmount, setExpenseAmount] = useState<number | undefined>();
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const [photo, setPhoto] = useState<any>();
     const [scannedImageToDelete, setScannedImageToDelete] = useState<any>();
-    const [amountCurrencyCode, setAmountCurrencyCode] = useState('EUR');
     const [guessedTotalAmount, setGuessedTotalAmount] = useState<number>();
     const [isFormValid, setIsFormValid] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     const [pickerOpen, setPickerOpen] = useState(false);
-    const scrollViewRef = useRef<ScrollView>(null);
+    const scrollViewRef = useRef<ScrollView | null>(null);
 
     const event: BusinessEvent = route.params.event;
-    const extraCurrencies: any[] = event.currencies ? event.currencies : [];
     const imagePickerCommonOptions = { mediaType: "photo", maxWidth: 800, maxHeight: 600, includeBase64: true };
 
     useEffect(() => {
-        useCustomHeaderWithButtonAsync(navigation, Utility.GetEventHeaderTitle(event), () => saveExpenseReport(), undefined, 'Crea nuova spesa', isFormValid, 'salva');
-    });
+        useCustomHeaderWithButtonAsync(navigation, Utility.GetEventHeaderTitle(event), () => saveExpenseReport(), 'save', 'Crea nuova spesa', !isFormValid, 'salva');
+    }, [navigation, event, isFormValid]);
+
+    useEffect(() => {
+        const valid = !!photo && !!expenseName && !!expenseDate && expenseAmount !== undefined && (expenseName !== 'altro' || !!expenseDescription);
+        setIsFormValid(valid);
+    }, [photo, expenseName, expenseDate, expenseAmount, expenseDescription]);
 
     const expenseItems = [
         "cena",
@@ -56,8 +56,8 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
         "altro"
     ];
 
-    const handleExpenseDescriptionChange = (e: any) => setExpenseDescription(e);
-    const handleExpenseAmount = (e: any) => setExpenseAmount(e);
+    const handleExpenseDescriptionChange = (e: string) => setExpenseDescription(e);
+    const handleExpenseAmount = (value: number | undefined) => setExpenseAmount(value);
 
     const deletePhoto = () => setPhoto(undefined);
 
@@ -140,7 +140,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
         const guessedAmount = Math.max(...allValuesWithDecimalsInPicture);
         if (guessedAmount && guessedAmount > 0) {
             setGuessedTotalAmount(guessedAmount);
-            setExpenseAmount(guessedAmount.toString());
+            setExpenseAmount(guessedAmount);
         }
     }
 
@@ -169,7 +169,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
                 expense.id = id >= 0 ? id + 1 : 0;
                 expense.name = expenseName.trim();
                 expense.description = expenseDescription.trim();
-                expense.amount = Number(expenseAmount);
+                expense.amount = expenseAmount ?? 0;
                 expense.date = (expenseDate as Date).toString();
                 expense.timeStamp = new Date().toString();
                 const documentDir = await FileManager.getDocumentDir();
@@ -218,7 +218,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
                     setExpenses(allExpenses);
                     Utility.ShowSuccessMessage("Nota spesa creata correttamente");
 
-                    NavigationHelper.getEventTabNavigation().navigate(Constants.Navigation.Event);
+                    navigation.getParent()?.navigate(Constants.Navigation.Event);
                 } else {
                     console.log("Cannot save the expense report because the photo could not be added to external storage");
                 }
@@ -240,7 +240,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
             validationErrorsTemp = { ...validationErrorsTemp, expenseDate: 'Campo obbligatorio' };
             isValid = false;
         }
-        if (!expenseAmount) {
+        if (expenseAmount === undefined || isNaN(expenseAmount)) {
             validationErrorsTemp = { ...validationErrorsTemp, expenseAmount: 'Campo obbligatorio' };
             isValid = false;
         }
@@ -265,92 +265,97 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
     Utility.OnFocus({ navigation: navigation, onFocusAction: refreshData });
 
     return (
-        <NativeBaseProvider>
+        <>
             <ModalLoaderComponent isLoading={isLoading} text='Creazione spesa in corso..' />
             <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
-                <ScrollView ref={scrollViewRef} style={styles.container}>
-                    <FormControl style={GlobalStyles.mt15} isRequired isDisabled>
-                        <FormControl.Label>Foto</FormControl.Label>
-                        <HStack style={[GlobalStyles.pt15]}>
-                            {photo != undefined && photo != null ? (
-                                <HStack>
-                                    <Image source={{ uri: `${photo.uri ? photo.uri : photo.base64}` }} style={styles.image} resizeMode="contain"></Image>
-                                    <InputSideButton icon={"x"} iconColor={ThemeColors.black} pressFunction={deletePhoto} />
-                                </HStack>
+                <ScrollView ref={scrollViewRef} style={styles.container} contentContainerStyle={{ paddingBottom: 24 }}>
+                    <View style={styles.field}>
+                        <Text style={styles.label}>Foto</Text>
+                        <View style={[styles.row, { paddingTop: 12 }]}>
+                            {photo ? (
+                                <View style={[styles.row]}>
+                                    <Image source={{ uri: `${photo.uri ? photo.uri : photo.base64}` }} style={styles.image} resizeMode="contain" />
+                                    <View style={styles.buttonSpacing}>
+                                        <InputSideButton icon={"x"} iconColor={ThemeColors.black} pressFunction={deletePhoto} />
+                                    </View>
+                                </View>
                             ) : (
-                                <>
-                                    <InputSideButton icon={"camera-retro"} iconColor={ThemeColors.black} pressFunction={onTakePhoto} />
-                                    <InputSideButton icon={"images"} iconColor={ThemeColors.black} pressFunction={onSelectImagePress} />
-                                    <InputSideButton icon={"car-side"} iconColor={ThemeColors.black} pressFunction={() => navigation.navigate(Constants.Navigation.RefundKmScreen, { event: event })} />
-                                </>
+                                <View style={styles.row}>
+                                    <View style={styles.buttonSpacing}>
+                                        <InputSideButton icon={"camera"} iconColor={ThemeColors.black} pressFunction={onTakePhoto} />
+                                    </View>
+                                    <View style={styles.buttonSpacing}>
+                                        <InputSideButton icon={"image"} iconColor={ThemeColors.black} pressFunction={onSelectImagePress} />
+                                    </View>
+                                    <View style={styles.buttonSpacing}>
+                                        <InputSideButton icon={"car"} iconColor={ThemeColors.black} pressFunction={() => navigation.navigate(Constants.Navigation.RefundKmScreen, { event: event })} />
+                                    </View>
+                                </View>
                             )}
-                        </HStack>
-                    </FormControl>
+                        </View>
+                    </View>
 
                     {photo ? (
                         <View style={{ width: "100%" }}>
-                            <FormControl style={GlobalStyles.mt15} isRequired isInvalid={'expenseName' in validationErrors}>
-                                <FormControl.Label>Titolo spesa</FormControl.Label>
-                            </FormControl>
-                            <View style={{ width: '100%' }}>
+                            <View style={styles.field}>
+                                <Text style={styles.label}>Titolo spesa</Text>
                                 <Pressable
                                     onPress={() => setPickerOpen(true)}
                                     style={[
                                         styles.pickerContainer,
-                                        { borderColor: 'expenseName' in validationErrors ? 'red' : '#d1d5db' }
+                                        { borderColor: 'expenseName' in validationErrors ? ThemeColors.danger : '#d1d5db' }
                                     ]}
                                 >
                                     <Text style={[styles.pickerText, { color: expenseName ? '#000' : '#9ca3af' }]}>
                                         {expenseName || 'Selezionare una voce'}
                                     </Text>
                                 </Pressable>
+                                <Modal transparent visible={pickerOpen} animationType="fade" onRequestClose={() => setPickerOpen(false)}>
+                                    <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPressOut={() => setPickerOpen(false)}>
+                                        <View style={styles.modalSheet}>
+                                            <ScrollView>
+                                                {expenseItems && expenseItems.length > 0 && expenseItems.map((item) => (
+                                                    <Pressable
+                                                        key={item}
+                                                        style={styles.modalItem}
+                                                        onPress={() => {
+                                                            setExpenseName(item);
+                                                            setPickerOpen(false);
+                                                        }}
+                                                    >
+                                                        <Text style={styles.modalItemText}>{item}</Text>
+                                                    </Pressable>
+                                                ))}
+                                            </ScrollView>
+                                        </View>
+                                    </TouchableOpacity>
+                                </Modal>
+                                <FormErrorMessageComponent text='Campo obbligatorio' field='expenseName' validationArray={validationErrors} />
                             </View>
-                            <Modal transparent visible={pickerOpen} animationType="fade" onRequestClose={() => setPickerOpen(false)}>
-                                <TouchableOpacity style={styles.modalBackdrop} activeOpacity={1} onPressOut={() => setPickerOpen(false)}>
-                                    <View style={styles.modalSheet}>
-                                        <ScrollView>
-                                            {expenseItems !== undefined && expenseItems.length > 0 && expenseItems.map((item) => (
-                                                <Pressable
-                                                    key={item}
-                                                    style={styles.modalItem}
-                                                    onPress={() => {
-                                                        setExpenseName(item);
-                                                        setPickerOpen(false);
-                                                    }}
-                                                >
-                                                    <Text style={styles.modalItemText}>{item}</Text>
-                                                </Pressable>
-                                            ))}
-                                        </ScrollView>
-                                    </View>
-                                </TouchableOpacity>
-                            </Modal>
-                            <FormErrorMessageComponent text='Campo obbligatorio' field='expenseName' validationArray={validationErrors} />
 
-                            <FormControl style={GlobalStyles.mt15} isRequired isInvalid={'expenseAmount' in validationErrors}>
-                                <FormControl.Label>Importo della spesa ({event.mainCurrency.symbol})</FormControl.Label>
+                            <View style={styles.field}>
+                                <Text style={styles.label}>Importo della spesa ({event.mainCurrency.symbol})</Text>
                                 <InputNumber defaultValue={guessedTotalAmount} placeholder='es. 50.5' onChange={handleExpenseAmount} isRequired={true} />
                                 <FormErrorMessageComponent text='Campo obbligatorio' field='expenseAmount' validationArray={validationErrors} />
-                            </FormControl>
+                            </View>
 
-                            <FormControl style={GlobalStyles.mt15} isRequired isInvalid={'expenseDate' in validationErrors}>
-                                <FormControl.Label>Data della spesa</FormControl.Label>
-                                <Input
-                                    caretHidden={true}
-                                    showSoftInputOnFocus={false}
-                                    placeholder="gg/mm/aaaa"
-                                    onPressIn={() => setShowDateTimePicker(true)}
-                                    value={expenseDate ? Utility.FormatDateDDMMYYYY(expenseDate.toString()) : ""}
-                                    InputLeftElement={
+                            <View style={styles.field}>
+                                <Text style={styles.label}>Data della spesa</Text>
+                                <Pressable onPress={() => setShowDateTimePicker(true)} style={styles.inputWithIcon}>
+                                    <BaseTextInput
+                                        editable={false}
+                                        value={expenseDate ? Utility.FormatDateDDMMYYYY(expenseDate.toString()) : ""}
+                                        placeholder="gg/mm/aaaa"
+                                    />
+                                    <View style={styles.iconWrapper}>
                                         <InputSideButton
                                             icon="calendar-day"
-                                            iconStyle={GlobalStyles.iconPrimary}
-                                            pressFunction={() => {
-                                                setShowDateTimePicker(true);
-                                            }}
+                                            iconStyle={styles.iconButton}
+                                            pressFunction={() => setShowDateTimePicker(true)}
+                                            size={18}
                                         />
-                                    }
-                                />
+                                    </View>
+                                </Pressable>
                                 {showDateTimePicker && (
                                     <DateTimePicker
                                         mode="date"
@@ -365,40 +370,50 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
                                     />
                                 )}
                                 <FormErrorMessageComponent text='Campo obbligatorio' field='expenseDate' validationArray={validationErrors} />
-                            </FormControl>
-                            <FormControl style={GlobalStyles.mt15} isRequired={expenseName == "altro"} isInvalid={'expenseDescription' in validationErrors}>
-                                <FormControl.Label>Descrizione della spesa</FormControl.Label>
-                                <TextArea placeholder="es. Taxi per trasferimento aeroporto" onChange={handleExpenseDescriptionChange} autoCompleteType={true} isInvalid={'expenseDescription' in validationErrors} onFocus={scrollToY} tvParallaxProperties={undefined} onTextInput={undefined}></TextArea>
-                                <FormErrorMessageComponent text='Campo obbligatorio con voce "altro" selezionata' field='expenseDescription' validationArray={validationErrors} />
-                            </FormControl>
+                            </View>
+
+                            <View style={styles.field}>
+                                <Text style={styles.label}>Descrizione della spesa</Text>
+                                <BaseTextInput
+                                    placeholder="es. Taxi per trasferimento aeroporto"
+                                    onChangeText={handleExpenseDescriptionChange}
+                                    multiline
+                                    numberOfLines={4}
+                                    hasError={'expenseDescription' in validationErrors}
+                                    onFocus={scrollToY}
+                                    style={styles.textArea}
+                                />
+                                <FormErrorMessageComponent text='Campo obbligatorio con voce \"altro\" selezionata' field='expenseDescription' validationArray={validationErrors} />
+                            </View>
                         </View>
                     ) : (
-                        <Text></Text>
+                        <Text style={styles.helper}>Aggiungi una foto per creare una spesa</Text>
                     )}
                 </ScrollView>
             </KeyboardAvoidingView>
-        </NativeBaseProvider>
+        </>
     )
 };
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
-        // justifyContent: 'flex-start',
-        // alignItems: 'center',
         height: '100%',
         padding: 20,
-        backgroundColor: 'white',
+        backgroundColor: ThemeColors.white,
     },
-    title: {
-        fontSize: 30,
+    field: {
+        marginTop: 15,
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: '600',
+        marginBottom: 6,
+        color: ThemeColors.black,
     },
     image: {
         height: 50,
         width: 50,
         marginRight: 10
-        // marginTop: 30,
-        // borderRadius: 10,
     },
     pickerContainer: {
         borderWidth: 1,
@@ -429,6 +444,34 @@ const styles = StyleSheet.create({
     },
     modalItemText: {
         fontSize: 16
+    },
+    helper: {
+        marginTop: 10,
+        color: ThemeColors.inactive,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    buttonSpacing: {
+        marginRight: 12,
+    },
+    inputWithIcon: {
+        position: 'relative',
+        justifyContent: 'center',
+    },
+    iconWrapper: {
+        position: 'absolute',
+        right: 4,
+        top: '50%',
+        transform: [{ translateY: -12 }],
+    },
+    iconButton: {
+        padding: 0,
+    },
+    textArea: {
+        minHeight: 100,
+        textAlignVertical: 'top',
     },
 });
 

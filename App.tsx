@@ -17,6 +17,7 @@ import { ThemeColors } from './src/lib/GlobalStyles';
 import HomeScreen from './src/screens/HomeScreen';
 import AllEventsScreen from './src/screens/AllEventsScreen';
 import EventHomeScreen from './src/screens/EventHomeScreen';
+import NewEventScreen from './src/screens/NewEventScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +31,7 @@ function App() {
           <Stack.Screen name={Constants.Navigation.LoginScreen} component={LoginScreen} options={loginScreenOptions} />
           <Stack.Screen name={Constants.Navigation.Home} component={HomeScreen} options={commonOptions} />
           <Stack.Screen name={Constants.Navigation.AllEvents} component={AllEventsScreen} options={commonOptions} />
-          {/* <Stack.Screen name={Constants.Navigation.NewEvent} component={NewEventScreen} options={commonOptions} /> */}
+          <Stack.Screen name={Constants.Navigation.NewEvent} component={NewEventScreen} options={commonOptions} />
           <Stack.Screen name={Constants.Navigation.EventHome} component={EventHomeScreen} options={commonOptions} />
           {/* <Stack.Screen name={Constants.Navigation.ViewPdf} component={ViewPdfScreen} options={commonOptions} /> */}
           {/* <Stack.Screen name={Constants.Navigation.EditEventScreen} component={EditEventScreen} options={commonOptions} /> */}

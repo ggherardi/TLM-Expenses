@@ -17,9 +17,9 @@ export const NavigationFakeButtonComponent = ({ pressFunction, icon, iconColor =
   <Pressable onPress={() => pressFunction()} style={({ pressed }) => [{
     opacity: pressed ? 0.2 : 1,
   }, styles.btnBox]} disabled={isDisabled}>
-    <View style={[GlobalStyles.flexRow, styles.button]}>
+    <View style={styles.button}>
       <BaseIcon
-        style={iconStyle ? iconStyle : GlobalStyles.iconPrimary}
+        style={iconStyle ? iconStyle : styles.icon}
         name={icon}
         size={size ? size : 20}
         color={isDisabled ? 'gray' : iconColor}
@@ -29,14 +29,22 @@ export const NavigationFakeButtonComponent = ({ pressFunction, icon, iconColor =
 
 const styles = StyleSheet.create({
   btnBox: {
+    paddingTop: 10,
     justifyContent: 'center',
-    paddingHorizontal: 30,
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   button: {
     backgroundColor: ThemeColors.primary,
     borderColor: ThemeColors.primary,
     borderWidth: 1,
-    padding: 10,
-    borderRadius: 30
-  }
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    padding: 0,
+  },
 })

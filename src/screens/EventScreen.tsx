@@ -11,10 +11,11 @@ import { Constants } from '../lib/Constants';
 import { PDFBuilder } from '../lib/PDFBuilder';
 import NavigationHelper from '../lib/NavigationHelper';
 import { Images } from '../assets/Images';
-import { Dimensions, Image, StyleSheet, Text } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import LoaderComponent from '../lib/components/LoaderComponent';
 import { BusinessEvent } from '../lib/models/BusinessEvent';
 import { FileManager } from '../lib/FileManager';
+import BaseIcon from '../lib/base-components/BaseIcon';
 
 const EventScreen = ({ route, navigation }: any) => {
     const [reports, setReports] = useState<ExpenseReport[]>();
@@ -33,11 +34,11 @@ const EventScreen = ({ route, navigation }: any) => {
     useEffect(() => {
         dataContext.setExpenseReportsKey(event.expensesDataContextKey);
         NavigationHelper.setEventTabNavigation(navigation);
-    }, []);
+    }, [event.expensesDataContextKey, navigation]);
 
     useEffect(() => {
-        useCustomHeaderWithButtonAsync(navigation.getParent(), Utility.GetEventHeaderTitle(event), () => viewPdf(), undefined, 'Nota spese', event.sentToCompany, event.sentToCompany ? 'inviato' : 'inviare');
-    });
+        useCustomHeaderWithButtonAsync(navigation.getParent(), Utility.GetEventHeaderTitle(event), () => viewPdf(), 'file-pdf', 'Nota spese', event.sentToCompany, event.sentToCompany ? 'inviato' : 'inviare');
+    }, [navigation, event]);
 
     const refreshData = async () => {
         setIsLoading(true);
@@ -67,49 +68,47 @@ const EventScreen = ({ route, navigation }: any) => {
     }
 
     return (
-        <NativeBaseProvider>
-            <GestureHandlerRootView>
-                {reports && reports.length ? (
-                    <ScrollView contentContainerStyle={[GlobalStyles.container]}>
-                        <View style={[GlobalStyles.container]}>
-                            {isLoading && (<LoaderComponent />)}
+        <GestureHandlerRootView>
+            {reports && reports.length ? (
+                <ScrollView contentContainerStyle={[GlobalStyles.container]}>
+                    <View style={[GlobalStyles.container]}>
+                        {isLoading && (<LoaderComponent />)}
+                        <View style={[GlobalStyles.flexRow, { paddingHorizontal: 5, paddingBottom: 10 }]}>
+                            <Text style={{ flex: 5, fontSize: 20 }}>Importo totale:</Text>
+                            <Text style={{ flex: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'right' }}>{totalAmount?.toFixed(2)} {event.mainCurrency.symbol}</Text>
+                        </View>
+                        {event.needCarRefund && (
                             <View style={[GlobalStyles.flexRow, { paddingHorizontal: 5, paddingBottom: 10 }]}>
-                                <Text style={{ flex: 5, fontSize: 20 }}>Importo totale:</Text>
-                                <Text style={{ flex: 2, fontSize: 20, fontWeight: 'bold', textAlign: 'right' }}>{totalAmount?.toFixed(2)} {event.mainCurrency.symbol}</Text>
+                                <Text style={{ flex: 5, fontSize: 12 }}>Rimborso chilometrico:</Text>
+                                <Text style={{ flex: 2, fontSize: 12, textAlign: 'right' }}>{refundKmAmount?.toFixed(2)} {event.mainCurrency.symbol}</Text>
                             </View>
-                            {event.needCarRefund && (
-                                <View style={[GlobalStyles.flexRow, { paddingHorizontal: 5, paddingBottom: 10 }]}>
-                                    <Text style={{ flex: 5, fontSize: 12 }}>Rimborso chilometrico:</Text>
-                                    <Text style={{ flex: 2, fontSize: 12, textAlign: 'right' }}>{refundKmAmount?.toFixed(2)} {event.mainCurrency.symbol}</Text>
-                                </View>
-                            )}
-                        </View>
-                        {reports && reports.length ? (
-                            <>
-                                {reports != undefined && reports.length > 0 && reports.map((report: ExpenseReport, index: number) => (
-                                    <View key={Utility.GenerateRandomGuid()}>
-                                        <ExpenseDataRowComponent expense={report} event={event} onDelete={refreshData} navigation={navigation} index={index} />
-                                    </View>
-                                ))}
-                            </>
-                        ) : (
-                            <></>
                         )}
-                    </ScrollView>
-                ) : (
-                    <Context.Provider value={appHeight}>
-                        <View style={{ flex: 1, padding: 10 }} onLayout={(e: any) => setAppHeight(e.nativeEvent.layout.height)}>
-                            <Image source={Images.empty_list_2.rnSource} style={{ alignSelf: 'center', height: 200, resizeMode: 'contain' }} />
-                            <Text style={[styles.text]}>Non sono state trovate spese per l'evento!</Text>
-                        </View>
-                        <View style={{ justifyContent: 'flex-end' }}>
-                            <Text style={[styles.text]}>Inserisci una nuova spesa</Text>
-                            <FontAwesomeIcon icon={'arrow-down-long'} size={20} color={"gray"} style={{ alignSelf: 'center', marginVertical: 10 }} />
-                        </View>
-                    </Context.Provider>
-                )}
-            </GestureHandlerRootView>
-        </NativeBaseProvider >
+                    </View>
+                    {reports && reports.length ? (
+                        <>
+                            {reports != undefined && reports.length > 0 && reports.map((report: ExpenseReport, index: number) => (
+                                <View key={Utility.GenerateRandomGuid()}>
+                                    <ExpenseDataRowComponent expense={report} event={event} onDelete={refreshData} navigation={navigation} index={index} />
+                                </View>
+                            ))}
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                </ScrollView>
+            ) : (
+                <Context.Provider value={appHeight}>
+                    <View style={{ flex: 1, padding: 10 }} onLayout={(e: any) => setAppHeight(e.nativeEvent.layout.height)}>
+                        <Image source={Images.empty_list_2.rnSource} style={{ alignSelf: 'center', height: 200, resizeMode: 'contain' }} />
+                        <Text style={[styles.text]}>Non sono state trovate spese per l'evento!</Text>
+                    </View>
+                    <View style={{ justifyContent: 'flex-end' }}>
+                        <Text style={[styles.text]}>Inserisci una nuova spesa</Text>
+                        <BaseIcon name={'arrow-down-long'} size={20} color={"gray"} style={{ alignSelf: 'center', marginVertical: 10 }} />
+                    </View>
+                </Context.Provider>
+            )}
+        </GestureHandlerRootView>
     )
 }
 

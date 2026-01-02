@@ -2,7 +2,7 @@ import { Utility } from './Utility';
 import { Bootstrap } from './Bootstrap';
 import { BusinessEvent } from './models/BusinessEvent';
 import { ExpenseReport } from './models/ExpenseReport';
-import { generatePDF, PDFResult } from 'react-native-html-to-pdf';
+import { generatePDF, type PDFResult } from 'react-native-html-to-pdf';
 import { degrees, PDFDocument, rgb } from 'pdf-lib';
 import { Constants } from './Constants';
 import dataContext from './models/DataContext';

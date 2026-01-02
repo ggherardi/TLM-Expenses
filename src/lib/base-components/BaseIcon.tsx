@@ -12,6 +12,7 @@ import {
   Cog,
   CornerUpLeft,
   Edit3,
+  FileText,
   FolderPlus,
   FolderTree,
   Hourglass,
@@ -55,7 +56,8 @@ export type IconName =
   | 'floppy-disk'
   | 'arrow-rotate-left'
   | 'calendar-day'
-  | 'pencil';
+  | 'pencil'
+  | 'file-pdf';
 
 type Props = {
   name: IconName;
@@ -95,6 +97,7 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   'arrow-rotate-left': CornerUpLeft,
   'calendar-day': CalendarDays,
   pencil: Edit3,
+  'file-pdf': FileText,
 };
 
 const BaseIcon = ({

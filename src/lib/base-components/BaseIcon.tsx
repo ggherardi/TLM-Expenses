@@ -11,6 +11,7 @@ import {
   CircleX,
   Cog,
   CornerUpLeft,
+  Edit3,
   FolderPlus,
   FolderTree,
   Hourglass,
@@ -53,7 +54,8 @@ export type IconName =
   | 'save'
   | 'floppy-disk'
   | 'arrow-rotate-left'
-  | 'calendar-day';
+  | 'calendar-day'
+  | 'pencil';
 
 type Props = {
   name: IconName;
@@ -92,6 +94,7 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   'floppy-disk': Save,
   'arrow-rotate-left': CornerUpLeft,
   'calendar-day': CalendarDays,
+  pencil: Edit3,
 };
 
 const BaseIcon = ({

@@ -1,4 +1,3 @@
-import { NativeBaseProvider, Row, View } from '@gluestack-ui/themed-native-base';
 import React from 'react';
 import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 import { useCustomHeaderWithButtonAsync } from '../lib/components/CustomHeaderComponent';
@@ -12,7 +11,6 @@ import { Constants } from '../lib/Constants';
 import { PDFBuilder } from '../lib/PDFBuilder';
 import NavigationHelper from '../lib/NavigationHelper';
 import { Images } from '../assets/Images';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Dimensions, Image, StyleSheet, Text } from 'react-native';
 import LoaderComponent from '../lib/components/LoaderComponent';
 import { BusinessEvent } from '../lib/models/BusinessEvent';

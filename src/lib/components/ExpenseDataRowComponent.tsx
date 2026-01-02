@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ExpenseReport } from '../models/ExpenseReport';
-import { Pressable, StyleSheet, Text, Alert, Animated, View, TouchableOpacity, TouchableHighlight, I18nManager } from 'react-native';
-import { Utility } from '../Utility';
+import { Pressable, StyleSheet, Text, Alert, View, I18nManager, Image } from 'react-native';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import { ExpenseReport } from '../models/ExpenseReport';
+import { Utility } from '../Utility';
 import dataContext from '../models/DataContext';
 import GlobalStyles, { ThemeColors } from '../GlobalStyles';
 import { BusinessEvent } from '../models/BusinessEvent';
 import { renderRightAction } from './SwipableActionsComponent';
 import { FileManager } from '../FileManager';
+import BaseIcon from '../base-components/BaseIcon';
 
 interface IExpenseDataRow {
     expense: ExpenseReport;
@@ -70,21 +71,25 @@ export const ExpenseDataRowComponent = ({ expense: expense, event, onDelete, ind
             <Swipeable ref={swipableRef} key={`swipable_${expense.name}_${index}_${Utility.GenerateRandomGuid()}`} renderRightActions={renderRightActions} overshootRight={false}>
                 <Pressable key={`${index}`} onPress={goToExpense} style={({ pressed }) => [
                     styles.container, { opacity: pressed ? 1 : 1, borderBottomWidth: 1, borderTopWidth: index == 0 ? 1 : 0, borderColor: ThemeColors.lightGray }]}>
-                    <Row>
+                    <View style={styles.row}>
                         <Text style={[styles.day]}>{Utility.FormatDateDDMMYYYY(expense.date)}</Text>
-                    </Row>
-                    <Row style={[GlobalStyles.pt5]}>
+                    </View>
+                    <View style={[styles.row, GlobalStyles.pt5]}>
                         <View style={[styles.expenseImageContainer]}>
-                            {Utility.IsNotNullOrUndefined(expense.photoFilePath) && Utility.IsNotNullOrUndefined(imageUri) && (
+                            {Utility.IsNotNullOrUndefined(expense.photoFilePath) && Utility.IsNotNullOrUndefined(imageUri) ? (
                                 <Image alt='noimage' source={{ uri: imageUri }} style={[styles.image]} />
+                            ) : (
+                                <View style={[styles.placeholderIcon]}>
+                                    <BaseIcon name="file-pdf" size={20} color={ThemeColors.inactive} />
+                                </View>
                             )}
                         </View>
                         <View style={[styles.expenseNameContainer]}>
                             {expense.description != undefined && expense.description.length ? (
-                                <VStack style={styles.expenseNameContainer}>
+                                <View style={styles.expenseNameContainer}>
                                     <Text style={[styles.expenseName]}>{expense.name}</Text>
                                     <Text style={[styles.expenseDescription]} numberOfLines={1}>{expense.description}</Text>
-                                </VStack>
+                                </View>
                             ) : (
                                 <Text style={[styles.expenseName]}>{expense.name}</Text>
                             )}
@@ -92,7 +97,7 @@ export const ExpenseDataRowComponent = ({ expense: expense, event, onDelete, ind
                         <View style={[styles.expenseAmountContainer]}>
                             <Text style={{ fontSize: 15 }}>{expense.amount.toFixed(2)} {event.mainCurrency?.symbol}</Text>
                         </View>
-                    </Row>
+                    </View>
                 </Pressable>
             </Swipeable>
         </GestureHandlerRootView>
@@ -169,5 +174,20 @@ const styles = StyleSheet.create({
         width: 40,
         marginRight: 10,
         borderRadius: 5,
+    },
+    placeholderIcon: {
+        height: 40,
+        width: 40,
+        marginRight: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: ThemeColors.lightGray,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     },
 });

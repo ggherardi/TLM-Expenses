@@ -1,8 +1,8 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform } from 'react-native';
-import { InputSideButton } from '../lib/components/InputSideButtonComponent';
-import GlobalStyles from '../lib/GlobalStyles';
+import { StyleSheet, ScrollView, View, KeyboardAvoidingView, Platform, Text, Pressable } from 'react-native';
+import { ThemeColors } from '../lib/GlobalStyles';
+import BaseIcon from '../lib/base-components/BaseIcon';
 import { BusinessEvent } from '../lib/models/BusinessEvent';
 import { Utility } from '../lib/Utility';
 import dataContext from '../lib/models/DataContext';
@@ -11,6 +11,7 @@ import { Currency, GetCurrencies, GetCurrency } from '../lib/data/Currencies';
 import { InputNumber } from '../lib/components/InputNumberComponent';
 import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageComponent';
 import ModalLoaderComponent from '../lib/components/ModalWithLoader';
+import BaseTextInput from '../lib/base-components/BaseTextInput';
 
 const EditEventScreen = ({ navigation, route }: any) => {
   const event: BusinessEvent = route.params.event;
@@ -32,12 +33,12 @@ const EditEventScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     useCustomHeaderWithButtonAsync(navigation, Utility.GetEventHeaderTitle(event), () => saveEvent(), undefined, 'Modifica evento', !isFormValid, 'salva');
-  });
+  }, [navigation, event, isFormValid]);
 
   const handleEventNameChange = (e: any) => setEventName(e);
   const handleEventDescriptionChange = (e: any) => setEventDescription(e);
   const handleCityChange = (e: any) => setCity(e);
-  const handleCashFundChange = (e: any) => setCashFund(e);
+  const handleCashFundChange = (value: number | undefined) => setCashFund(value || 0);
 
   const saveEvent = async () => {
     setIsLoading(true);
@@ -86,6 +87,7 @@ const EditEventScreen = ({ navigation, route }: any) => {
       isValid = false;
     }
     setValidationErrors(validationErrorsTemp);
+    setIsFormValid(isValid);
     return isValid;
   }
 
@@ -96,33 +98,27 @@ const EditEventScreen = ({ navigation, route }: any) => {
   }
 
   return (
-    <NativeBaseProvider>
+    <>
       <ModalLoaderComponent isLoading={isLoading} text='Modifica evento in corso..' />
       <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
         <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
-          <FormControl style={GlobalStyles.mt15}>
-            <FormControl.Label>Nome dell'evento</FormControl.Label>
-            <Input defaultValue={event.name} placeholder="Nome evento" isDisabled onChange={handleEventNameChange} maxLength={50}></Input>
-          </FormControl>
+          <View style={styles.field}>
+            <Text style={styles.label}>Nome dell'evento</Text>
+            <BaseTextInput value={event.name} placeholder="Nome evento" editable={false} />
+          </View>
 
-          <FormControl style={GlobalStyles.mt15} isRequired isInvalid={'eventStartDate' in validationErrors}>
-            <FormControl.Label>Data di inizio dell'evento</FormControl.Label>
-            <Input
-              caretHidden={true}
-              placeholder="gg/mm/aaaa"
-              showSoftInputOnFocus={false}
-              onPressIn={() => setShowStartDateTimePicker(true)}
-              value={Utility.FormatDateDDMMYYYY(eventStartDate.toString())}
-              InputLeftElement={
-                <InputSideButton
-                  icon="calendar-day"
-                  iconStyle={GlobalStyles.iconPrimary}
-                  pressFunction={() => {
-                    setShowStartDateTimePicker(true);
-                  }}
-                />
-              }
-            />
+          <View style={styles.field}>
+            <Text style={styles.label}>Data di inizio dell'evento</Text>
+            <Pressable onPress={() => setShowStartDateTimePicker(true)} style={styles.inputWithIcon}>
+              <BaseTextInput
+                editable={false}
+                value={Utility.FormatDateDDMMYYYY(eventStartDate.toString())}
+                placeholder="gg/mm/aaaa"
+              />
+              <Pressable style={styles.iconWrapper} onPress={() => setShowStartDateTimePicker(true)}>
+                <BaseIcon name="calendar-day" size={18} color={ThemeColors.primary} />
+              </Pressable>
+            </Pressable>
             {showStartDateTimePicker && (
               <DateTimePicker
                 mode="date"
@@ -138,26 +134,20 @@ const EditEventScreen = ({ navigation, route }: any) => {
               />
             )}
             <FormErrorMessageComponent text={validationErrors.eventStartDate} field='eventStartDate' validationArray={validationErrors} />
-          </FormControl>
+          </View>
 
-          <FormControl style={GlobalStyles.mt15} isRequired isInvalid={'eventEndDate' in validationErrors}>
-            <FormControl.Label>Data di fine dell'evento</FormControl.Label>
-            <Input
-              caretHidden={true}
-              placeholder="gg/mm/aaaa"
-              showSoftInputOnFocus={false}
-              onPressIn={() => setShowEndDateTimePicker(true)}
-              value={Utility.FormatDateDDMMYYYY(eventEndDate.toString())}
-              InputLeftElement={
-                <InputSideButton
-                  icon="calendar-day"
-                  iconStyle={GlobalStyles.iconPrimary}
-                  pressFunction={() => {
-                    setShowEndDateTimePicker(true);
-                  }}
-                />
-              }
-            />
+          <View style={styles.field}>
+            <Text style={styles.label}>Data di fine dell'evento</Text>
+            <Pressable onPress={() => setShowEndDateTimePicker(true)} style={styles.inputWithIcon}>
+              <BaseTextInput
+                editable={false}
+                value={Utility.FormatDateDDMMYYYY(eventEndDate.toString())}
+                placeholder="gg/mm/aaaa"
+              />
+              <Pressable style={styles.iconWrapper} onPress={() => setShowEndDateTimePicker(true)}>
+                <BaseIcon name="calendar-day" size={18} color={ThemeColors.primary} />
+              </Pressable>
+            </Pressable>
             {showEndDateTimePicker && (
               <DateTimePicker
                 mode="date"
@@ -172,59 +162,68 @@ const EditEventScreen = ({ navigation, route }: any) => {
               />
             )}
             <FormErrorMessageComponent text={validationErrors.eventEndDate} field='eventEndDate' validationArray={validationErrors} />
-          </FormControl>
+          </View>
 
-          <FormControl style={GlobalStyles.mt15} isRequired>
-            <FormControl.Label>Destinazione (città)</FormControl.Label>
-            <Input defaultValue={event.city} placeholder="es. Roma" onChange={handleCityChange} isInvalid={'city' in validationErrors} maxLength={200}></Input>
+          <View style={styles.field}>
+            <Text style={styles.label}>Destinazione (città)</Text>
+            <BaseTextInput defaultValue={event.city} placeholder="es. Roma" onChangeText={handleCityChange} hasError={'city' in validationErrors} maxLength={200} />
             <FormErrorMessageComponent text='Campo obbligatorio' field='city' validationArray={validationErrors} />
-          </FormControl>
+          </View>
 
-          <FormControl style={GlobalStyles.mt15}>
-            <FormControl.Label>Fondo cassa (€)</FormControl.Label>
+          <View style={styles.field}>
+            <Text style={styles.label}>Fondo cassa (€)</Text>
             <InputNumber placeholder='es. 10.5' onChange={handleCashFundChange} isRequired={true} defaultValue={cashFund} />
-          </FormControl>
+          </View>
 
-          <FormControl style={GlobalStyles.mt15}>
-            <FormControl.Label>Descrizione dell'evento</FormControl.Label>
-            <TextArea defaultValue={event.description} placeholder="Descrizione breve dell'evento" onChange={handleEventDescriptionChange} autoCompleteType={true} maxLength={500} onFocus={scrollToY}></TextArea>
-          </FormControl>
+          <View style={styles.field}>
+            <Text style={styles.label}>Descrizione dell'evento</Text>
+            <BaseTextInput
+              defaultValue={event.description}
+              placeholder="Descrizione breve dell'evento"
+              onChangeText={handleEventDescriptionChange}
+              multiline
+              numberOfLines={4}
+              style={styles.textArea}
+              onFocus={scrollToY}
+              maxLength={500}
+            />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </NativeBaseProvider>
+    </>
   );
 };
 
-const multiSelectStyle = StyleSheet.create({
-  itemText: {
-    fontWeight: '100',
-    fontSize: 15
-  },
-  listContainer: {
-    backgroundColor: "red"
-  },
-  selectToggle: {
-    borderColor: '#d4d4d4',
-    borderRadius: 4,
-    borderWidth: 1,
-    marginTop: 5,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
-  },
-  selectToggleText: {
-    color: '#d4d4d4',
-    fontSize: 15,
-  }
-})
-
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 15,
+    paddingBottom: 30,
   },
-  title: {
-    fontSize: 30,
-  }
+  field: {
+    marginTop: 15,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 6,
+    color: ThemeColors.black,
+  },
+  inputWithIcon: {
+    position: 'relative',
+    justifyContent: 'center',
+  },
+  iconWrapper: {
+    position: 'absolute',
+    right: 5,
+    top: '50%',
+    transform: [{ translateY: -14 }],
+    paddingVertical: 4,
+    paddingHorizontal: 2,
+  },
+  textArea: {
+    minHeight: 100,
+    textAlignVertical: 'top',
+  },
 });
 
 export default EditEventScreen;

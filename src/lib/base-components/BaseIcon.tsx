@@ -4,6 +4,7 @@ import {
   ArrowDown,
   Check,
   CheckCircle,
+  CalendarDays,
   ChevronDown,
   ChevronUp,
   CircleCheck,
@@ -51,7 +52,8 @@ export type IconName =
   | 'cancel'
   | 'save'
   | 'floppy-disk'
-  | 'arrow-rotate-left';
+  | 'arrow-rotate-left'
+  | 'calendar-day';
 
 type Props = {
   name: IconName;
@@ -89,6 +91,7 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   save: Save,
   'floppy-disk': Save,
   'arrow-rotate-left': CornerUpLeft,
+  'calendar-day': CalendarDays,
 };
 
 const BaseIcon = ({

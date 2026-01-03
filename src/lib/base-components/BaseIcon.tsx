@@ -15,6 +15,7 @@ import {
   Camera,
   Images,
   CarFront,
+  Send,
   FileText,
   FolderPlus,
   FolderTree,
@@ -63,7 +64,8 @@ export type IconName =
   | 'file-pdf'
   | 'camera'
   | 'image'
-  | 'car';
+  | 'car'
+  | 'paper-plane';
 
 type Props = {
   name: IconName;
@@ -107,6 +109,7 @@ const iconMap: Record<IconName, React.ComponentType<any>> = {
   camera: Camera,
   image: Images,
   car: CarFront,
+  'paper-plane': Send,
 };
 
 const BaseIcon = ({

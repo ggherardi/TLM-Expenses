@@ -42,7 +42,7 @@ const EventHomeScreen = ({ navigation, route }: any) => {
                 initialParams={[route.params.event]}
                 options={commonTabOptions}></Tab.Screen>
             <Tab.Screen
-                name={Constants.Navigation.NewExpenseReport}
+                name={Constants.Navigation.NewEvent}
                 component={PlaceholderScreen}
                 options={newExpenseTabOptions}></Tab.Screen>
             <Tab.Screen

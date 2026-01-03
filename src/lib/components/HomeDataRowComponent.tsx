@@ -106,8 +106,7 @@ export const HomeDataRowComponent = ({ event, onDelete, index, navigation }: IHo
     return (
         <GestureHandlerRootView>
             <Swipeable ref={swipableRef} key={`swipable_${event.name}_${index}_${Utility.GenerateRandomGuid()}`} renderRightActions={renderRightActions} overshootRight={false}>
-                <Pressable key={`pressable_${event.name}_${index}_${Utility.GenerateRandomGuid()}`}
-                    onPress={goToEvent} style={({ pressed }) => [
+                <Pressable key={`pressable_${event.name}_${index}_${Utility.GenerateRandomGuid()}`} onPress={goToEvent} style={({ pressed }) => [
                         styles.container, { backgroundColor: pressed ? ThemeColors.selected : ThemeColors.white, borderTopWidth: index == 0 ? 1 : 0, borderBottomWidth: 1, borderColor: ThemeColors.lightGray }]}>
                     <Row>
                         <Text style={[styles.day]}>{Utility.FormatDateDDMM(event.startDate)} - {Utility.FormatDateDDMM(event.endDate)}</Text>

@@ -18,6 +18,8 @@ import HomeScreen from './src/screens/HomeScreen';
 import AllEventsScreen from './src/screens/AllEventsScreen';
 import EventHomeScreen from './src/screens/EventHomeScreen';
 import NewEventScreen from './src/screens/NewEventScreen';
+import NewExpenseReportScreen from './src/screens/NewExpenseReportScreen';
+import EditEventScreen from './src/screens/EditEventScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,9 +36,9 @@ function App() {
           <Stack.Screen name={Constants.Navigation.NewEvent} component={NewEventScreen} options={commonOptions} />
           <Stack.Screen name={Constants.Navigation.EventHome} component={EventHomeScreen} options={commonOptions} />
           {/* <Stack.Screen name={Constants.Navigation.ViewPdf} component={ViewPdfScreen} options={commonOptions} /> */}
-          {/* <Stack.Screen name={Constants.Navigation.EditEventScreen} component={EditEventScreen} options={commonOptions} /> */}
+          <Stack.Screen name={Constants.Navigation.EditEventScreen} component={EditEventScreen} options={commonOptions} />
           {/* <Stack.Screen name={Constants.Navigation.RefundKmScreen} component={RefundKmScreen} options={commonOptions} /> */}
-          {/* <Stack.Screen name={Constants.Navigation.NewExpenseReport} component={NewExpenseReportScreen} options={commonOptions} /> */}
+          <Stack.Screen name={Constants.Navigation.NewExpenseReport} component={NewExpenseReportScreen} options={commonOptions} />
           {/* <Stack.Screen name={Constants.Navigation.UpdateApp} component={UpdateApp} options={commonOptions} /> */}
         </Stack.Navigator>
       </NavigationContainer>

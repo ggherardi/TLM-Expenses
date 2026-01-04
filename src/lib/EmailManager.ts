@@ -1,5 +1,3 @@
-import * as MailComposer from 'expo-mail-composer';
-
 export type EmailAttachment = {
   path: string;
   mimeType?: string;
@@ -16,6 +14,15 @@ export const EmailManager = {
     body: string,
     attachments?: (string | EmailAttachment)[],
   ): Promise<EmailSendResult> {
+    // Lazy load to avoid crashing if the native module is not present
+    let MailComposer: typeof import('expo-mail-composer') | null = null;
+    try {
+      MailComposer = require('expo-mail-composer');
+    } catch (error) {
+      console.log('expo-mail-composer module not available', error);
+      return { ok: false, reason: 'not_available' };
+    }
+
     try {
       const available = await MailComposer.isAvailableAsync();
       if (!available) {

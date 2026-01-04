@@ -15,7 +15,6 @@ import { FileManager } from '../lib/FileManager';
 import ModalLoaderComponent from '../lib/components/ModalWithLoader';
 import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageComponent';
 import DocumentScanner, { ResponseType } from 'react-native-document-scanner-plugin'
-import MlkitOcr from 'react-native-mlkit-ocr';
 import BaseTextInput from '../lib/base-components/BaseTextInput';
 const NewExpenseReportScreen = ({ route, navigation }: any) => {
     const [expenses, setExpenses] = useState(dataContext.ExpenseReports.getAllData())
@@ -112,7 +111,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
                 }
                 setScannedImageToDelete(tempPhoto);
                 setPhoto(tempPhoto);
-                startOCR(tempPhoto);
+                // startOCR(tempPhoto);
             }
         } catch (err) {
             console.log(err);
@@ -121,27 +120,27 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
     }
 
     const startOCR = async (picture: any) => {
-        const resultFromUri = await MlkitOcr.detectFromUri(picture.uri);
-        console.log("resultFromUri: ", resultFromUri);
+        // const resultFromUri = await MlkitOcr.detectFromUri(picture.uri);
+        // console.log("resultFromUri: ", resultFromUri);
 
-        /* GG: The logic I applied is the following: I take all the text from the picture (they are an array of texts). From this array, I create a new array containing numbers with decimals, which should be currencies.
-        From this array I take the highest value, which should be the total amount */
-        let allValuesWithDecimalsInPicture: any[] = [];
-        resultFromUri.map(a => {
-            const splittedText = a.text.replace(',', '.').split(' ');
-            splittedText.map(st => {
-                if (st.indexOf('.') > -1 && !isNaN(Number(st))) {
-                    allValuesWithDecimalsInPicture = [...allValuesWithDecimalsInPicture, Number(st)];
-                }
-            });
-            return splittedText;
-        })
-        console.log("allValueallValuesWithDecimalsInPicture: ", allValuesWithDecimalsInPicture);
-        const guessedAmount = Math.max(...allValuesWithDecimalsInPicture);
-        if (guessedAmount && guessedAmount > 0) {
-            setGuessedTotalAmount(guessedAmount);
-            setExpenseAmount(guessedAmount);
-        }
+        // /* GG: The logic I applied is the following: I take all the text from the picture (they are an array of texts). From this array, I create a new array containing numbers with decimals, which should be currencies.
+        // From this array I take the highest value, which should be the total amount */
+        // let allValuesWithDecimalsInPicture: any[] = [];
+        // resultFromUri.map(a => {
+        //     const splittedText = a.text.replace(',', '.').split(' ');
+        //     splittedText.map(st => {
+        //         if (st.indexOf('.') > -1 && !isNaN(Number(st))) {
+        //             allValuesWithDecimalsInPicture = [...allValuesWithDecimalsInPicture, Number(st)];
+        //         }
+        //     });
+        //     return splittedText;
+        // })
+        // console.log("allValueallValuesWithDecimalsInPicture: ", allValuesWithDecimalsInPicture);
+        // const guessedAmount = Math.max(...allValuesWithDecimalsInPicture);
+        // if (guessedAmount && guessedAmount > 0) {
+        //     setGuessedTotalAmount(guessedAmount);
+        //     setExpenseAmount(guessedAmount);
+        // }
     }
 
     const saveExpenseReport = async () => {

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import GlobalStyles, { ThemeColors } from '../lib/GlobalStyles';
 import { Utility } from '../lib/Utility';
 import { useCustomHeaderWithButtonAsync } from '../lib/components/CustomHeaderComponent';
@@ -15,9 +16,14 @@ const ProfileScreen = ({ navigation, route }: any) => {
     const [email, setEmail] = useState(userProfile.email ? userProfile.email : "nota-spese@tourleadermanagement.ch");
     const [validationErrors, setValidationErrors] = useState({});
 
-    useEffect(() => {
-        useCustomHeaderWithButtonAsync(navigation.getParent(), `Profilo Tour Leader`, () => save(), undefined, undefined, false, 'salva');
-    });
+    useFocusEffect(
+        useCallback(() => {
+            useCustomHeaderWithButtonAsync(navigation.getParent(), `Profilo Tour Leader`, () => save(), 'save', undefined, false);
+            return () => {
+                navigation.getParent()?.setOptions({ headerTitle: undefined });
+            };
+        }, [navigation])
+    );
 
     const save = () => {
         if (!validate()) {

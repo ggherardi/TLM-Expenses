@@ -31,12 +31,14 @@ interface ICustomHeaderSaveButtonComponent {
 
 const HeaderButton = ({ icon, text, onPress, isDisabled }: { icon?: IconName; text?: string; onPress: Function; isDisabled?: boolean }) => {
     const buttonColor = isDisabled ? ThemeColors.inactive : ThemeColors.white;
+    const isIconOnly = icon && !text;
     return (
         <Pressable
             disabled={isDisabled}
             onPress={() => onPress()}
             style={({ pressed }) => [
                 styles.actionButton,
+                isIconOnly && styles.iconOnlyButton,
                 pressed && !isDisabled && styles.actionButtonPressed,
                 isDisabled && styles.actionButtonDisabled
             ]}>
@@ -162,6 +164,13 @@ const styles = StyleSheet.create({
     actionButtonDisabled: {
         borderColor: ThemeColors.inactive,
         opacity: 0.5,
+    },
+    iconOnlyButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
     },
     iconWithText: {
         marginRight: 6,

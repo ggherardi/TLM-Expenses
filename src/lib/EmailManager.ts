@@ -1,3 +1,6 @@
+import { Linking } from 'react-native';
+import Share from 'react-native-share';
+
 export type EmailAttachment = {
   path: string;
   mimeType?: string;
@@ -14,42 +17,43 @@ export const EmailManager = {
     body: string,
     attachments?: (string | EmailAttachment)[],
   ): Promise<EmailSendResult> {
-    // Lazy load to avoid crashing if the native module is not present
-    let MailComposer: any = null;
+    // Use react-native-share to open chooser with attachments (better support across devices)
     try {
-      MailComposer = require('expo-mail-composer');
+      const urls =
+        attachments?.map(att => {
+          if (typeof att === 'string') {
+            const sanitized = att.startsWith('file://') ? att : `file://${att}`;
+            return sanitized;
+          }
+          const sanitized = att.path.startsWith('file://') ? att.path : `file://${att.path}`;
+          return sanitized;
+        }) ?? [];
+
+      const result = await Share.open({
+        title: subject,
+        message: body,
+        subject,
+        urls: urls.length ? urls : undefined,
+        failOnCancel: false,
+      });
+      console.log('Share result:', result);
+      return { ok: true, status: 'shared' };
     } catch (error) {
-      console.log('expo-mail-composer module not available', error);
-      return { ok: false, reason: 'not_available' };
+      console.log('Share error, falling back to mailto', error);
     }
 
+    // Fallback: mailto without attachments
     try {
-      const available = await MailComposer.isAvailableAsync();
-      if (!available) {
-        console.log('Cannot open default email app (MailComposer not available)');
-        return { ok: false, reason: 'not_available' };
+      const mailto = `mailto:${encodeURIComponent(to.join(','))}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const canOpen = await Linking.canOpenURL(mailto);
+      if (canOpen) {
+        await Linking.openURL(mailto);
+        return { ok: true, status: 'mailto' };
       }
-
-      const normalizedAttachments = attachments?.map(att => {
-        if (typeof att === 'string') {
-          return att;
-        }
-        return att.path;
-      });
-
-      const result = await MailComposer.composeAsync({
-        subject,
-        recipients: to,
-        body,
-        attachments: normalizedAttachments,
-        isHtml: true,
-      });
-
-      console.log('MailComposer result:', result.status ?? result);
-      return { ok: true, status: (result as any)?.status ?? 'sent' };
-    } catch (error) {
-      console.log('MailComposer error:', error);
-      return { ok: false, reason: 'error', error };
+      return { ok: false, reason: 'not_available' };
+    } catch (error2) {
+      console.log('mailto fallback error', error2);
+      return { ok: false, reason: 'error', error: error2 };
     }
   },
 };

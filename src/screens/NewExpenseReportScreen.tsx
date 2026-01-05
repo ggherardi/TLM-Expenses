@@ -16,6 +16,7 @@ import ModalLoaderComponent from '../lib/components/ModalWithLoader';
 import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageComponent';
 import DocumentScanner, { ResponseType } from 'react-native-document-scanner-plugin'
 import BaseTextInput from '../lib/base-components/BaseTextInput';
+import NavigationHelper from '../lib/NavigationHelper';
 const NewExpenseReportScreen = ({ route, navigation }: any) => {
     const [expenses, setExpenses] = useState(dataContext.ExpenseReports.getAllData())
     const [expenseName, setExpenseName] = useState('');
@@ -217,7 +218,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
                     setExpenses(allExpenses);
                     Utility.ShowSuccessMessage("Nota spesa creata correttamente");
 
-                    navigation.getParent()?.navigate(Constants.Navigation.Event);
+                    NavigationHelper.getEventTabNavigation()?.navigate(Constants.Navigation.Event);
                 } else {
                     console.log("Cannot save the expense report because the photo could not be added to external storage");
                 }

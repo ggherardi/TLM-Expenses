@@ -4,7 +4,7 @@ export type EmailAttachment = {
 };
 
 export type EmailSendResult =
-  | { ok: true; status: MailComposer.MailComposerStatus }
+  | { ok: true; status: string }
   | { ok: false; reason: 'not_available' | 'error'; error?: unknown };
 
 export const EmailManager = {
@@ -15,7 +15,7 @@ export const EmailManager = {
     attachments?: (string | EmailAttachment)[],
   ): Promise<EmailSendResult> {
     // Lazy load to avoid crashing if the native module is not present
-    let MailComposer: typeof import('expo-mail-composer') | null = null;
+    let MailComposer: any = null;
     try {
       MailComposer = require('expo-mail-composer');
     } catch (error) {
@@ -45,8 +45,8 @@ export const EmailManager = {
         isHtml: true,
       });
 
-      console.log('MailComposer result:', result.status);
-      return { ok: true, status: result.status };
+      console.log('MailComposer result:', result.status ?? result);
+      return { ok: true, status: (result as any)?.status ?? 'sent' };
     } catch (error) {
       console.log('MailComposer error:', error);
       return { ok: false, reason: 'error', error };

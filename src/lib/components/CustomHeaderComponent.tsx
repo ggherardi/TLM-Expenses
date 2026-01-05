@@ -74,8 +74,8 @@ const CustomHeaderWithButtonComponent = ({ navigation, title, subtitle, onClick,
                     <Text style={[styles.eventName, GlobalStyles.colorWhite]} numberOfLines={1}>{title}</Text>
                 )}
             </View>
-            <View style={[styles.actionWrapper, { flex: icon ? 1 : 2 }]}>
-                <HeaderButton icon={icon} text={buttonText} onPress={onClick} isDisabled={isDisabled} />
+            <View style={[styles.actionWrapper, { flex: 1, justifyContent: 'flex-end' }]}>
+                <HeaderButton icon={icon} onPress={onClick} isDisabled={isDisabled} />
             </View>
         </View>
     )

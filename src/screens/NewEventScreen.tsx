@@ -18,6 +18,7 @@ import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageCom
 import { FileManager } from '../lib/FileManager';
 import NotificationManager from '../lib/NotificationManager';
 import BaseTextInput from '../lib/base-components/BaseTextInput';
+import BaseButton from '../lib/base-components/BaseButton';
 
 const NewEventScreen = ({ navigation, route }: any) => {
   const [events, setEvents] = useState<BusinessEvent[]>(dataContext.Events.getAllData());
@@ -261,7 +262,7 @@ const NewEventScreen = ({ navigation, route }: any) => {
 
           <View style={styles.field}>
             <Text style={styles.label}>Fondo cassa (€)</Text>
-            <InputNumber placeholder='es. 10.5' onChange={handleCashFundChange} isRequired={true} />
+            <InputNumber placeholder='es. 10.5' defaultValue={cashFund} onChange={handleCashFundChange} />
           </View>
 
           <View style={styles.field}>
@@ -270,6 +271,15 @@ const NewEventScreen = ({ navigation, route }: any) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      <View style={styles.footerButton}>
+        <BaseButton
+          title="Crea Evento"
+          icon="save"
+          onPress={saveEvent}
+          disabled={!isFormValid || isLoading}
+          loading={isLoading}
+        />
+      </View>
     </>
   );
 };
@@ -300,6 +310,10 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 0,
+  },
+  footerButton: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
 });
 

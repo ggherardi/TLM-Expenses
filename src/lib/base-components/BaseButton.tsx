@@ -7,8 +7,10 @@ import {
   StyleSheet,
   Text,
   ViewStyle,
+  View,
 } from 'react-native';
 import { ThemeColors } from '../../lib/GlobalStyles';
+import BaseIcon, { IconName } from './BaseIcon';
 
 type Variant = 'primary' | 'outline';
 
@@ -19,6 +21,9 @@ interface Props {
   disabled?: boolean;
   variant?: Variant;
   style?: StyleProp<ViewStyle>;
+  icon?: IconName;
+  iconColor?: string;
+  iconSize?: number;
 }
 
 const BaseButton = ({
@@ -28,6 +33,9 @@ const BaseButton = ({
   disabled = false,
   variant = 'primary',
   style,
+  icon,
+  iconColor,
+  iconSize = 18,
 }: Props) => {
   const isPrimary = variant === 'primary';
 
@@ -48,6 +56,11 @@ const BaseButton = ({
           color={isPrimary ? ThemeColors.white : ThemeColors.primary}
           style={styles.spinner}
         />
+      ) : null}
+      {icon ? (
+        <View style={styles.iconWrapper}>
+          <BaseIcon name={icon} size={iconSize} color={iconColor ?? (isPrimary ? ThemeColors.white : ThemeColors.primary)} />
+        </View>
       ) : null}
       <Text style={[styles.text, isPrimary ? styles.textPrimary : styles.textOutline]}>
         {title}
@@ -81,6 +94,9 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   spinner: {
+    marginRight: 8,
+  },
+  iconWrapper: {
     marginRight: 8,
   },
   text: {

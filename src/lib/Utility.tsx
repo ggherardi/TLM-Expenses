@@ -1,11 +1,11 @@
-import React, { useEffect, version } from "react";
+import React, { useEffect } from "react";
 import { UserProfile } from './models/UserProfile';
 import dataContext from './models/DataContext';
 import { BusinessEvent } from './models/BusinessEvent';
-// import { showMessage } from 'react-native-flash-message';
 import { ExpenseReport } from './models/ExpenseReport';
 import { Platform } from "react-native";
 import { VersionData } from "./models/VersionData";
+import { ToastService } from "./components/ToastProvider";
 
 export const Utility = {
   SortByDate: (array: any[], fieldToSort: string, ascending: boolean = true) => {
@@ -211,19 +211,11 @@ export const Utility = {
   },
 
   ShowSuccessMessage: (text: string) => {
-    // showMessage({
-    //   message: text,
-    //   icon: (props: any) => <FontAwesomeIcon icon='check-circle' color={ThemeColors.white} size={20} style={{ marginRight: 10 }} />,
-    //   type: 'success'
-    // })
+    ToastService.show({ message: text, type: 'success' });
   },
 
   ShowFailureMessage: (text: string) => {
-    // showMessage({
-    //   message: text,
-    //   icon: (props: any) => <FontAwesomeIcon icon='xmark-circle' color={ThemeColors.white} size={20} style={{ marginRight: 10 }} />,
-    //   type: 'danger'
-    // })
+    ToastService.show({ message: text, type: 'error' });
   },
 
   SwipableHint: (swipableRef: any) => {

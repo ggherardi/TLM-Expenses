@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import GlobalStyles, { ThemeColors } from '../GlobalStyles';
 import BaseIcon, { IconName } from '../base-components/BaseIcon';
 
@@ -14,6 +14,7 @@ interface ICustomHeaderWithButtonComponent {
     navigation;
     title: string;
     icon?: IconName;
+    iconStyle?: StyleProp<ViewStyle>;
     onClick: Function;
     subtitle?: string;
     isDisabled?: boolean;
@@ -29,7 +30,7 @@ interface ICustomHeaderSaveButtonComponent {
     isDisabled: boolean;
 }
 
-const HeaderButton = ({ icon, text, onPress, isDisabled }: { icon?: IconName; text?: string; onPress: Function; isDisabled?: boolean }) => {
+const HeaderButton = ({ icon, text, onPress, isDisabled, iconStyle }: { icon?: IconName; text?: string; onPress: Function; isDisabled?: boolean; iconStyle?: StyleProp<ViewStyle> }) => {
     const buttonColor = isDisabled ? ThemeColors.inactive : ThemeColors.white;
     const isIconOnly = icon && !text;
     return (
@@ -47,7 +48,10 @@ const HeaderButton = ({ icon, text, onPress, isDisabled }: { icon?: IconName; te
                     name={icon}
                     size={22}
                     color={buttonColor}
-                    style={text ? styles.iconWithText : styles.iconOnlyIcon}
+                    style={[
+                        text ? styles.iconWithText : styles.iconOnlyIcon,
+                        iconStyle,
+                    ]}
                 />
             )}
             {text && <Text style={[styles.actionText, { color: buttonColor }]} numberOfLines={1}>{text}</Text>}
@@ -70,7 +74,7 @@ const BaseCustomHeaderComponent = ({ navigation, title, subtitle }: ICustomHeade
     );
 }
 
-const CustomHeaderWithButtonComponent = ({ navigation, title, subtitle, onClick, icon, isDisabled, buttonText }: ICustomHeaderWithButtonComponent) => {
+const CustomHeaderWithButtonComponent = ({ navigation, title, subtitle, onClick, icon, isDisabled, buttonText, iconStyle }: ICustomHeaderWithButtonComponent) => {
     return (
         <View style={[styles.headerRow, { width: navigation.canGoBack() ? '75%' : '90%' }]}>
             <View style={{ flex: navigation.canGoBack() ? 4 : 6 }}>
@@ -84,7 +88,7 @@ const CustomHeaderWithButtonComponent = ({ navigation, title, subtitle, onClick,
                 )}
             </View>
             <View style={[styles.actionWrapper, { flex: 1, justifyContent: 'flex-end' }]}>
-                <HeaderButton icon={icon} onPress={onClick} isDisabled={isDisabled} />
+                <HeaderButton icon={icon} onPress={onClick} isDisabled={isDisabled} iconStyle={iconStyle} />
             </View>
         </View>
     )
@@ -116,10 +120,10 @@ const useCustomHeader = (navigation: any, title: string, subtitle?: string) => {
     })
 }
 
-export const useCustomHeaderWithButtonAsync = (navigation: any, title: string, onClick: Function, icon?: IconName, subtitle?: string, isDisabled?: boolean, buttonText?: string) => {
+export const useCustomHeaderWithButtonAsync = (navigation: any, title: string, onClick: Function, icon?: IconName, subtitle?: string, isDisabled?: boolean, buttonText?: string, iconStyle?: StyleProp<ViewStyle>) => {
     return new Promise((resolve, reject) => {
         navigation.setOptions({
-            headerTitle: () => <CustomHeaderWithButtonComponent navigation={navigation} title={title} icon={icon} subtitle={subtitle} onClick={onClick as Function} isDisabled={isDisabled as boolean} buttonText={buttonText} />,
+            headerTitle: () => <CustomHeaderWithButtonComponent navigation={navigation} title={title} icon={icon} iconStyle={iconStyle} subtitle={subtitle} onClick={onClick as Function} isDisabled={isDisabled as boolean} buttonText={buttonText} />,
         });
         resolve(true);
     });
@@ -182,7 +186,6 @@ const styles = StyleSheet.create({
     iconOnlyIcon: {
         alignSelf: 'center',
         marginLeft: 0,
-        transform: [{ translateX: -1 }],
     },
     iconWithText: {
         marginRight: 6,

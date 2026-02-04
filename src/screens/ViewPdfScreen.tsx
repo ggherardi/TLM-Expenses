@@ -12,7 +12,16 @@ const ViewPdfScreen = ({ navigation, route }: any) => {
   const event: BusinessEvent = route.params.event;
 
   useEffect(() => {
-    useCustomHeaderWithButtonAsync(navigation, event.name, () => { sendEmail() }, 'paper-plane', 'PDF Nota spese');
+    useCustomHeaderWithButtonAsync(
+      navigation,
+      event.name,
+      () => { sendEmail() },
+      'paper-plane',
+      'PDF Nota spese',
+      undefined,
+      undefined,
+      { marginLeft: -2 }
+    );
   }, []);
 
   const sendEmail = async () => {

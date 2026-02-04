@@ -1,5 +1,5 @@
 import { Linking } from 'react-native';
-import Share from 'react-native-share';
+import Share, { Social } from 'react-native-share';
 
 export type EmailAttachment = {
   path: string;
@@ -34,10 +34,8 @@ export const EmailManager = {
         message: body,
         subject,
         urls: urls.length ? urls : undefined,
-        social: Share.Social.EMAIL,
+        social: Social.Email,
         email: to.join(','),
-        recipients: to,
-        failOnCancel: false,
       });
       console.log('Share result:', result);
       return { ok: true, status: 'shared' };

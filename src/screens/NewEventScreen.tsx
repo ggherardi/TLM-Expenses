@@ -177,8 +177,8 @@ const NewEventScreen = ({ navigation, route }: any) => {
   return (
     <>
       <ModalLoaderComponent isLoading={isLoading} text='Creazione evento in corso..' />
-      <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
-        <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.container} ref={scrollViewRef}>
           <View style={styles.field}>
             <Text style={styles.label}>Nome dell'evento</Text>
             <BaseTextInput placeholder="Nome evento" onChangeText={handleEventNameChange} maxLength={50} hasError={'eventName' in validationErrors} />
@@ -285,6 +285,14 @@ const NewEventScreen = ({ navigation, route }: any) => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: ThemeColors.white,
+  },
+  scroll: {
+    flex: 1,
+    backgroundColor: ThemeColors.white,
+  },
   container: {
     padding: 20,
     backgroundColor: ThemeColors.white,

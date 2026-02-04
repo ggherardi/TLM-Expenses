@@ -95,8 +95,8 @@ const RefundKmScreen = ({ navigation, route }: any) => {
   return (
     <>
       <ModalLoaderComponent isLoading={isLoading} text='Modifica evento in corso..' />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
-        <ScrollView contentContainerStyle={styles.container}>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.container}>
           <Pressable style={styles.checkboxRow} onPress={() => setNeedCarRefund(!needCarRefund)}>
             <View style={[styles.checkbox, needCarRefund && styles.checkboxChecked]}>
               {needCarRefund && <BaseIcon name="check" size={14} color={ThemeColors.white} />}
@@ -167,6 +167,14 @@ const RefundKmScreen = ({ navigation, route }: any) => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: ThemeColors.white,
+  },
+  scroll: {
+    flex: 1,
+    backgroundColor: ThemeColors.white,
+  },
   container: {
     padding: 20,
     backgroundColor: ThemeColors.white,

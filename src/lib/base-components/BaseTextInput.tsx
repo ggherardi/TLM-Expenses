@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     borderColor: '#d1d5db',
     backgroundColor: '#f5f5f5',
     fontSize: 16,
+    color: ThemeColors.black,
   },
 });
 

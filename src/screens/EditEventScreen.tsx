@@ -100,8 +100,8 @@ const EditEventScreen = ({ navigation, route }: any) => {
   return (
     <>
       <ModalLoaderComponent isLoading={isLoading} text='Modifica evento in corso..' />
-      <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
-        <ScrollView contentContainerStyle={styles.container} ref={scrollViewRef}>
+      <KeyboardAvoidingView style={styles.root} behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
+        <ScrollView style={styles.scroll} contentContainerStyle={styles.container} ref={scrollViewRef}>
           <View style={styles.field}>
             <Text style={styles.label}>Nome dell'evento</Text>
             <BaseTextInput value={event.name} placeholder="Nome evento" editable={false} />
@@ -195,9 +195,18 @@ const EditEventScreen = ({ navigation, route }: any) => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: ThemeColors.white,
+  },
+  scroll: {
+    flex: 1,
+    backgroundColor: ThemeColors.white,
+  },
   container: {
     padding: 15,
     paddingBottom: 30,
+    backgroundColor: ThemeColors.white,
   },
   field: {
     marginTop: 15,

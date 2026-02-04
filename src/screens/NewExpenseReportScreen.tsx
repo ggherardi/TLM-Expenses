@@ -267,8 +267,8 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
     return (
         <>
             <ModalLoaderComponent isLoading={isLoading} text='Creazione spesa in corso..' />
-            <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
-                <ScrollView ref={scrollViewRef} style={styles.container} contentContainerStyle={{ paddingBottom: 24 }}>
+            <KeyboardAvoidingView style={styles.root} behavior={Platform.OS == 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100}>
+                <ScrollView ref={scrollViewRef} style={styles.scroll} contentContainerStyle={[styles.container, { paddingBottom: 24 }]}>
                     <View style={styles.field}>
                         <Text style={styles.label}>Foto</Text>
                         <View style={[styles.row, { paddingTop: 12 }]}>
@@ -396,8 +396,15 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
+    root: {
+        flex: 1,
+        backgroundColor: ThemeColors.white,
+    },
+    scroll: {
+        flex: 1,
+        backgroundColor: ThemeColors.white,
+    },
     container: {
-        height: '100%',
         padding: 20,
         backgroundColor: ThemeColors.white,
     },

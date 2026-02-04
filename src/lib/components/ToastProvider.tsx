@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
 import { ThemeColors } from '../GlobalStyles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -27,6 +28,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   const [visible, setVisible] = useState(false);
   const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const anim = useRef(new Animated.Value(0)).current;
+  const insets = useSafeAreaInsets();
 
   const show = (options: ToastOptions) => {
     if (hideTimeout.current) {
@@ -77,7 +79,12 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     <ToastContext.Provider value={contextValue}>
       {children}
       {visible && toast ? (
-        <Animated.View style={[styles.container, { transform: [{ translateY }] }]}>
+        <Animated.View
+          style={[
+            styles.container,
+            { transform: [{ translateY }], paddingTop: insets.top + 8 },
+          ]}
+        >
           <View style={[styles.toast, { backgroundColor: bgColor }]}>
             <Text style={styles.text}>{toast.message}</Text>
           </View>
@@ -90,7 +97,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 10,
+    top: 0,
     left: 0,
     right: 0,
     alignItems: 'center',

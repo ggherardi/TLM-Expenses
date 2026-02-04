@@ -17,7 +17,7 @@ export const EmailManager = {
     body: string,
     attachments?: (string | EmailAttachment)[],
   ): Promise<EmailSendResult> {
-    // Use react-native-share to open chooser with attachments (better support across devices)
+    // Try to open the email composer directly with recipients prefilled
     try {
       const urls =
         attachments?.map(att => {
@@ -29,17 +29,44 @@ export const EmailManager = {
           return sanitized;
         }) ?? [];
 
-      const result = await Share.open({
+      const result = await Share.shareSingle({
+        title: subject,
+        message: body,
+        subject,
+        urls: urls.length ? urls : undefined,
+        social: Share.Social.EMAIL,
+        email: to.join(','),
+        recipients: to,
+        failOnCancel: false,
+      });
+      console.log('Share result:', result);
+      return { ok: true, status: 'shared' };
+    } catch (error) {
+      console.log('Share email error, falling back to chooser', error);
+    }
+
+    // Fallback: generic chooser (lets user pick any app)
+    try {
+      const urls =
+        attachments?.map(att => {
+          if (typeof att === 'string') {
+            const sanitized = att.startsWith('file://') ? att : `file://${att}`;
+            return sanitized;
+          }
+          const sanitized = att.path.startsWith('file://') ? att.path : `file://${att.path}`;
+          return sanitized;
+        }) ?? [];
+
+      await Share.open({
         title: subject,
         message: body,
         subject,
         urls: urls.length ? urls : undefined,
         failOnCancel: false,
       });
-      console.log('Share result:', result);
-      return { ok: true, status: 'shared' };
-    } catch (error) {
-      console.log('Share error, falling back to mailto', error);
+      return { ok: true, status: 'shared_chooser' };
+    } catch (error2) {
+      console.log('Share chooser error, falling back to mailto', error2);
     }
 
     // Fallback: mailto without attachments

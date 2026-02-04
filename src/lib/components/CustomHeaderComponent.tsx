@@ -42,7 +42,14 @@ const HeaderButton = ({ icon, text, onPress, isDisabled }: { icon?: IconName; te
                 pressed && !isDisabled && styles.actionButtonPressed,
                 isDisabled && styles.actionButtonDisabled
             ]}>
-            {icon && <BaseIcon name={icon} size={22} color={buttonColor} style={text ? styles.iconWithText : undefined} />}
+            {icon && (
+                <BaseIcon
+                    name={icon}
+                    size={22}
+                    color={buttonColor}
+                    style={text ? styles.iconWithText : styles.iconOnlyIcon}
+                />
+            )}
             {text && <Text style={[styles.actionText, { color: buttonColor }]} numberOfLines={1}>{text}</Text>}
         </Pressable>
     );
@@ -171,6 +178,11 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingHorizontal: 0,
         paddingVertical: 0,
+    },
+    iconOnlyIcon: {
+        alignSelf: 'center',
+        marginLeft: 0,
+        transform: [{ translateX: -1 }],
     },
     iconWithText: {
         marginRight: 6,

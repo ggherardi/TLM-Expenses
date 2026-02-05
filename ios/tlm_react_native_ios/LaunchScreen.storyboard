@@ -17,15 +17,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchLogo" translatesAutoresizingMaskIntoConstraints="NO" id="QPI-Pi-a8Q">
-                                <rect key="frame" x="87.5" y="183.5" width="200" height="200"/>
+                                <rect key="frame" x="25.5" y="146.5" width="324" height="324"/>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="QPI-Pi-a8Q" firstAttribute="centerX" secondItem="Bcu-3y-fUS" secondAttribute="centerX" id="2nH-fo-lC0"/>
                             <constraint firstItem="QPI-Pi-a8Q" firstAttribute="centerY" secondItem="Bcu-3y-fUS" secondAttribute="centerY" id="85x-wb-fMo"/>
-                            <constraint firstItem="QPI-Pi-a8Q" firstAttribute="width" secondItem="nil" secondAttribute="notAnAttribute" constant="200" id="oBp-wS-Ajc"/>
-                            <constraint firstItem="QPI-Pi-a8Q" firstAttribute="height" secondItem="nil" secondAttribute="notAnAttribute" constant="200" id="yPs-QW-0dv"/>
+                            <constraint firstItem="QPI-Pi-a8Q" firstAttribute="width" secondItem="nil" secondAttribute="notAnAttribute" constant="324" id="oBp-wS-Ajc"/>
+                            <constraint firstItem="QPI-Pi-a8Q" firstAttribute="height" secondItem="nil" secondAttribute="notAnAttribute" constant="324" id="yPs-QW-0dv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                     </view>

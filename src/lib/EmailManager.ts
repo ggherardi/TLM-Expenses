@@ -32,33 +32,24 @@ export const EmailManager = {
         ? attachments[0].mimeType
         : undefined;
     const primaryFilename = primaryUrl ? primaryUrl.split('/').pop() : undefined;
+    if (!primaryUrl) {
+      return { ok: false, reason: 'not_available' };
+    }
     // Try to open the email composer directly with recipients prefilled
     try {
       if (Platform.OS === 'android') {
-        // First try email target directly with single attachment (most reliable for Gmail)
-        if (primaryUrl) {
-          const result = await Share.shareSingle({
-            social: Social.Email,
-            url: primaryUrl,
-            type: primaryMime ?? 'application/pdf',
-            filename: primaryFilename,
-            subject,
-            message: body,
-            title: subject,
-            email: to.join(','),
-          });
-          console.log('Share result (android shareSingle email):', result);
-          return { ok: true, status: 'shared' };
-        }
-        // Fallback: chooser with urls
-        const result = await Share.open({
-          title: subject,
-          message: body,
+        // Android: prefer shareSingle EMAIL target with single attachment
+        const result = await Share.shareSingle({
+          social: Social.Email,
+          url: primaryUrl,
+          type: primaryMime ?? 'application/pdf',
+          filename: primaryFilename,
           subject,
-          urls: urls.length ? urls : undefined,
-          failOnCancel: false,
+          message: body,
+          title: subject,
+          email: to.join(','),
         });
-        console.log('Share result (android open):', result);
+        console.log('Share result (android shareSingle email):', result);
         return { ok: true, status: 'shared' };
       } else {
         const result = await Share.shareSingle({
@@ -85,8 +76,8 @@ export const EmailManager = {
         title: subject,
         message: body,
         subject,
+        url: primaryUrl,
         urls: urls.length ? urls : undefined,
-        failOnCancel: false,
       });
       return { ok: true, status: 'shared_chooser' };
     } catch (error2) {

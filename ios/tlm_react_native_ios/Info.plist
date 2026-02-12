@@ -33,8 +33,14 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) richiede l'utilizzo della fotocamera per la scansione delle ricevute</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>$(PRODUCT_NAME) utilizzo cartelle</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Accesso alla posizione per riconoscere il luogo dove è stata scattata la foto delle ricevute</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Accesso alla raccolta delle immagini per la scansione delle ricevute</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

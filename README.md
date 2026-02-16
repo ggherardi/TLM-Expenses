@@ -1,6 +1,8 @@
-TODO
+Instructions for PlayStore
 
-- Replace react-native-flash-message
+increase version code and version name in build.gradle
+gradlew /clean
+npx react-native build-android --mode=release
 
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).

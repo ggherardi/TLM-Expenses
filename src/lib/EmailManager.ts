@@ -35,10 +35,21 @@ export const EmailManager = {
     if (!primaryUrl) {
       return { ok: false, reason: 'not_available' };
     }
+    const fallbackToMailto = async (): Promise<EmailSendResult> => {
+      try {
+        const mailto = `mailto:${encodeURIComponent(to.join(','))}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        await Linking.openURL(mailto);
+        return { ok: true, status: 'mailto' };
+      } catch (error) {
+        console.log('mailto fallback error', error);
+        return { ok: false, reason: 'not_available', error };
+      }
+    };
+
     // Try to open the email composer directly with recipients prefilled
     try {
       if (Platform.OS === 'android') {
-        // Android: prefer shareSingle EMAIL target with single attachment
+        // Android: target email app directly (no generic chooser)
         const result = await Share.shareSingle({
           social: Social.Email,
           url: primaryUrl,
@@ -48,6 +59,7 @@ export const EmailManager = {
           message: body,
           title: subject,
           email: to.join(','),
+          recipient: to.join(','),
         });
         console.log('Share result (android shareSingle email):', result);
         return { ok: true, status: 'shared' };
@@ -67,7 +79,11 @@ export const EmailManager = {
         return { ok: true, status: 'shared' };
       }
     } catch (error) {
-      console.log('Share email error, falling back to chooser', error);
+      console.log('Share email error', error);
+      if (Platform.OS === 'android') {
+        // On Android avoid generic file-share sheet and fall back to mailto.
+        return fallbackToMailto();
+      }
     }
 
     // Fallback: generic chooser (lets user pick any app)
@@ -85,17 +101,6 @@ export const EmailManager = {
     }
 
     // Fallback: mailto without attachments
-    try {
-      const mailto = `mailto:${encodeURIComponent(to.join(','))}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      const canOpen = await Linking.canOpenURL(mailto);
-      if (canOpen) {
-        await Linking.openURL(mailto);
-        return { ok: true, status: 'mailto' };
-      }
-      return { ok: false, reason: 'not_available' };
-    } catch (error2) {
-      console.log('mailto fallback error', error2);
-      return { ok: false, reason: 'error', error: error2 };
-    }
+    return fallbackToMailto();
   },
 };

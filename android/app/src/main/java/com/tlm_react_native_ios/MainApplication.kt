@@ -1,4 +1,4 @@
-package com.tlm_react_native_ios
+package com.tlmexpenses
 
 import android.app.Application
 import com.facebook.react.PackageList

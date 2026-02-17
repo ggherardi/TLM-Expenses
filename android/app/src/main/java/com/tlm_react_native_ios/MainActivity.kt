@@ -1,4 +1,4 @@
-package com.tlm_react_native_ios
+package com.tlmexpenses
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

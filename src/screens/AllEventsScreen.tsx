@@ -48,7 +48,7 @@ const AllEventsScreen = ({ navigation, route }: any) => {
         <ScrollView contentContainerStyle={[GlobalStyles.container]}>
           {/* se si vuole riattivare il quick action per messaggi, usare InputSideButton con le nuove icone BaseIcon */}
           {events.map((event: BusinessEvent, index: number) => (
-            <View key={`event_${index}_${event.guid || Utility.GenerateRandomGuid()}`}>
+            <View key={`event_${index}_${event.id || Utility.GenerateRandomGuid()}`}>
               <HomeDataRowComponent key={`homedatarow_${index}`} event={event} onDelete={refreshData} navigation={navigation} index={index} />
             </View>
           ))}

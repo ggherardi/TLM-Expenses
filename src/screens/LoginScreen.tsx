@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }: any) => {
       };
 
       const needsUpdateOffline = (versionFile: VersionFile): boolean => {
-        console.log("Checking if log file exists: ", versionFile);
+        console.log("Checking if version file exists: ", versionFile);
         if (!versionFile) {
           return false;
         }

@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }: any) => {
   const [userProfile] = useState<UserProfile>(Utility.GetUserProfile());
   const [name, setName] = useState(userProfile.name);
   const [surname, setSurname] = useState(userProfile.surname);
-  const [email, setEmail] = useState(userProfile.email);
+  const [email] = useState(userProfile.email);
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
@@ -26,71 +26,60 @@ const LoginScreen = ({ navigation }: any) => {
 
   useEffect(() => {
     (async () => {
-      let doesAppNeedUpdate = false;
-      let versionFileJson: VersionFile = {
-        version_schema: 1,
-        global_message: null,
-        maintenance: { enabled: false, message: '' },
-        ios: {
-          latest_version: appVersion,
-          min_supported_version: appVersion,
-          force_update: false,
-          store_url: '',
-          message: '',
-          changelog: [],
-        },
-        android: {
-          latest_version: appVersion,
-          min_supported_version: appVersion,
-          force_update: false,
-          store_url: '',
-          message: '',
-          changelog: [],
-        },
+      const compareVersions = (current: string, minimum: string): number => {
+        const currentParts = current.split('.').map(p => Number.parseInt(p, 10) || 0);
+        const minimumParts = minimum.split('.').map(p => Number.parseInt(p, 10) || 0);
+        const maxLen = Math.max(currentParts.length, minimumParts.length);
+        for (let i = 0; i < maxLen; i++) {
+          const c = currentParts[i] ?? 0;
+          const m = minimumParts[i] ?? 0;
+          if (c > m) return 1;
+          if (c < m) return -1;
+        }
+        return 0;
       };
 
-      const needsUpdateOffline = (versionFile: VersionFile): boolean => {
-        console.log("Checking if version file exists: ", versionFile);
+      const needsUpdate = (versionFile?: VersionFile): boolean => {
         if (!versionFile) {
           return false;
         }
-        const minVersionToCheck = Utility.IsIOS() ? versionFile.ios.min_supported_version : versionFile.android.min_supported_version;
-        console.log(`appVersion: ${appVersion}, minVersionToCheck: ${minVersionToCheck}, appVersion < minVersionToCheck: ${appVersion < minVersionToCheck}`);
-        return Number(appVersion) < Number(minVersionToCheck);
+        const minVersionToCheck = Utility.IsIOS()
+          ? versionFile.ios.min_supported_version
+          : versionFile.android.min_supported_version;
+        const comparison = compareVersions(appVersion, minVersionToCheck);
+        const mustUpdate = comparison < 0;
+        console.log(`Version check -> appVersion=${appVersion}, minSupported=${minVersionToCheck}, comparison=${comparison}, mustUpdate=${mustUpdate}`);
+        return mustUpdate;
       };
 
-      const versionData: VersionData = Utility.GetVersionData();
-      if (needsUpdateOffline(versionData.versionFile)) {
-        navigation.replace(Constants.Navigation.UpdateApp, { versionFile: versionData.versionFile });
-        return;
-      }
+      let versionFileToCheck: VersionFile | undefined = Utility.GetVersionData()?.versionFile;
 
       try {
         const versionFileUrl = !__DEV__ ? Constants.VersionCheck.VersionFileUrl : Constants.VersionCheck.VersionFileUrlDebug;
         console.log("VersionFileUrl: ", versionFileUrl);
-        const jsonPromise = await fetch(versionFileUrl, {
+        const response = await fetch(versionFileUrl, {
           method: 'GET',
           headers: { Accept: 'application/json' }, 
         });
-        versionFileJson = await jsonPromise.json();
+        if (!response.ok) {
+          throw new Error(`Version file fetch failed with status ${response.status}`);
+        }
+        const versionFileJson = await response.json();
+        versionFileToCheck = versionFileJson;
+
         const versionData = new VersionData();
         versionData.id = 1;
         versionData.versionFile = versionFileJson;
         dataContext.Version.saveData([versionData]);
-        console.log(versionFileJson);
-        const minVersionToCheck = Utility.IsIOS() ? versionFileJson.ios.min_supported_version : versionFileJson.android.min_supported_version;
-        console.log(`${appVersion} < ${minVersionToCheck}? ${appVersion < minVersionToCheck}`);
-        console.log(`Version to check: ${minVersionToCheck}`);
-        doesAppNeedUpdate = Number(appVersion) < Number(minVersionToCheck);
-        console.log("Does app need updated? ", doesAppNeedUpdate);
       } catch (err) {
-        console.log("Errore while fetching", err);
+        console.log("Errore while fetching version file, using cached data if present", err);
       }
-      if (doesAppNeedUpdate) {
-        console.log("navigating with ", versionFileJson.version_schema);
-        navigation.replace(Constants.Navigation.UpdateApp, { versionFile: versionFileJson });
+
+      if (needsUpdate(versionFileToCheck)) {
+        navigation.replace(Constants.Navigation.UpdateApp, { versionFile: versionFileToCheck });
         return;
       }
+
       if (userProfile && userProfile.name && userProfile.surname) {
         console.log("Logging in..");
         setIsLoading(true);
@@ -99,7 +88,7 @@ const LoginScreen = ({ navigation }: any) => {
         setIsLoading(false);
       }
     })();
-  }, []);
+  }, [navigation, userProfile]);
 
   const login = () => {
     setIsDisabled(true);

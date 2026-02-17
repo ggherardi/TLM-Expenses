@@ -20,7 +20,8 @@ const ViewPdfScreen = ({ navigation, route }: any) => {
       'PDF Nota spese',
       undefined,
       undefined,
-      { marginLeft: -2 }
+      { marginLeft: -2 },
+      true
     );
   }, []);
 

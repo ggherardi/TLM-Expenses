@@ -19,8 +19,10 @@ const EventSettingsScreen = ({ route, navigation }: any) => {
             navigation.getParent(),
             Utility.GetEventHeaderTitle(refreshedEvent ?? event),
             () => { navigation.navigate(Constants.Navigation.EditEventScreen, { event: refreshedEvent ?? event }) },
-            'pencil',
-            'Impostazioni evento'
+            undefined,
+            'Impostazioni evento',
+            undefined,
+            'modifica'
         );
     };
 

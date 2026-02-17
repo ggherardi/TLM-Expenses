@@ -18,7 +18,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
     useFocusEffect(
         useCallback(() => {
-            useCustomHeaderWithButtonAsync(navigation.getParent(), `Profilo Tour Leader`, () => save(), 'save', undefined, false);
+            useCustomHeaderWithButtonAsync(navigation.getParent(), `Profilo Tour Leader`, () => save(), undefined, undefined, false, 'salva');
             return () => {
                 navigation.getParent()?.setOptions({ headerTitle: undefined });
             };

@@ -6,8 +6,8 @@
       "message": "Stiamo effettuando manutenzione programmata. Alcune funzionalità potrebbero non essere disponibili."
     },
     "ios": {
-      "latest_version": "2.2",
-      "min_supported_version": "2.2",
+      "latest_version": "2.3",
+      "min_supported_version": "2.3",
       "force_update": true,
       "store_url": "https://apps.apple.com/it/app/tlm-expenses/id6596773276?l=en-GB",
       "message": "È disponibile una nuova versione dell'app per iOS.",
@@ -15,8 +15,8 @@
       ]
     },
     "android": {
-      "latest_version": "2.3",
-      "min_supported_version": "2.3",
+      "latest_version": "2.4",
+      "min_supported_version": "2.4",
       "force_update": true,
       "store_url": "https://play.google.com/store/apps/details?id=com.tlmexpenses&hl=en&pli=1",
       "message": "Nuova versione per Android.",

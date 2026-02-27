@@ -38,7 +38,7 @@ const NewExpenseReportScreen = ({ route, navigation }: any) => {
 
     useEffect(() => {
         useCustomHeaderWithButtonAsync(navigation, Utility.GetEventHeaderTitle(event), () => saveExpenseReport(), 'save', 'Crea nuova spesa', !isFormValid, 'salva');
-    }, [navigation, event, isFormValid]);
+    }, [navigation, event, isFormValid, expenses, expenseName, expenseDescription, expenseDate, expenseAmount, photo, scannedImageToDelete]);
 
     useEffect(() => {
         const valid = !!photo && !!expenseName && !!expenseDate && expenseAmount !== undefined && (expenseName !== 'altro' || !!expenseDescription);

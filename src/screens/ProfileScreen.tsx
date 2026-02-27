@@ -22,7 +22,7 @@ const ProfileScreen = ({ navigation, route }: any) => {
             return () => {
                 navigation.getParent()?.setOptions({ headerTitle: undefined });
             };
-        }, [navigation])
+        }, [navigation, name, surname, email])
     );
 
     const save = () => {

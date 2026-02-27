@@ -30,7 +30,7 @@ const RefundKmScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     useCustomHeaderWithButtonAsync(navigation, Utility.GetEventHeaderTitle(event), () => saveEvent(), 'save', 'Rimborso chilometrico', !isFormValid, 'salva');
-  }, [navigation, event, isFormValid]);
+  }, [navigation, event, isFormValid, needCarRefund, startingCity, arrivalCity, totalTravelledKms, travelDate, refundForfait, events]);
 
   useEffect(() => {
     const valid =
@@ -107,12 +107,12 @@ const RefundKmScreen = ({ navigation, route }: any) => {
             <View>
               <View style={styles.field}>
                 <Text style={styles.label}>Località di partenza (città)</Text>
-                <BaseTextInput defaultValue={event.refundStartingCity} placeholder="es. Roma" onChangeText={setStartingCity} hasError={'startingCity' in validationErrors} />
+                <BaseTextInput value={startingCity} placeholder="es. Roma" onChangeText={setStartingCity} hasError={'startingCity' in validationErrors} />
                 <FormErrorMessageComponent text='Campo obbligatorio' field='startingCity' validationArray={validationErrors} />
               </View>
               <View style={styles.field}>
                 <Text style={styles.label}>Località di arrivo (città)</Text>
-                <BaseTextInput defaultValue={event.refundArrivalCity} placeholder="es. Firenze" onChangeText={setArrivalCity} hasError={'arrivalCity' in validationErrors} />
+                <BaseTextInput value={arrivalCity} placeholder="es. Firenze" onChangeText={setArrivalCity} hasError={'arrivalCity' in validationErrors} />
                 <FormErrorMessageComponent text='Campo obbligatorio' field='arrivalCity' validationArray={validationErrors} />
               </View>
               <View style={styles.field}>

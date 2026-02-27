@@ -33,7 +33,7 @@ const EditEventScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     useCustomHeaderWithButtonAsync(navigation, Utility.GetEventHeaderTitle(event), () => saveEvent(), undefined, 'Modifica evento', !isFormValid, 'salva');
-  }, [navigation, event, isFormValid]);
+  }, [navigation, event, isFormValid, eventName, eventDescription, eventStartDate, eventEndDate, mainCurrencyCode, city, currenciesCodes, cashFund, events]);
 
   const handleEventNameChange = (e: any) => setEventName(e);
   const handleEventDescriptionChange = (e: any) => setEventDescription(e);
@@ -166,7 +166,7 @@ const EditEventScreen = ({ navigation, route }: any) => {
 
           <View style={styles.field}>
             <Text style={styles.label}>Destinazione (città)</Text>
-            <BaseTextInput defaultValue={event.city} placeholder="es. Roma" onChangeText={handleCityChange} hasError={'city' in validationErrors} maxLength={200} />
+            <BaseTextInput value={city || ''} placeholder="es. Roma" onChangeText={handleCityChange} hasError={'city' in validationErrors} maxLength={200} />
             <FormErrorMessageComponent text='Campo obbligatorio' field='city' validationArray={validationErrors} />
           </View>
 

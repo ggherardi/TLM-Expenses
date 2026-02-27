@@ -39,7 +39,7 @@ const NewEventScreen = ({ navigation, route }: any) => {
 
   useEffect(() => {
     useCustomHeaderWithButtonAsync(navigation, "Crea nuovo evento", () => saveEvent(), 'save', undefined, !isFormValid, 'salva');
-  }, [navigation, isFormValid]);
+  }, [navigation, isFormValid, eventName, eventDescription, eventStartDate, eventEndDate, mainCurrencyCode, city, currenciesCodes, cashFund, events]);
 
   useEffect(() => {
     const valid = !!eventName && !!city && !!eventStartDate && !!eventEndDate && eventStartDate.getTime() <= eventEndDate.getTime();

@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Keyboard, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Keyboard, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import GlobalStyles, { ThemeColors } from '../lib/GlobalStyles';
 import { Utility } from '../lib/Utility';
@@ -8,6 +8,8 @@ import { UserProfile } from '../lib/models/UserProfile';
 import dataContext from '../lib/models/DataContext';
 import { FormErrorMessageComponent } from '../lib/components/FormErrorMessageComponent';
 import BaseTextInput from '../lib/base-components/BaseTextInput';
+
+const appVersion: string = require('../../package.json').version;
 
 const ProfileScreen = ({ navigation, route }: any) => {
     const [userProfile, setUserProfile] = useState<UserProfile>(Utility.GetUserProfile());
@@ -65,6 +67,16 @@ const ProfileScreen = ({ navigation, route }: any) => {
 
     Utility.OnFocus({ navigation: navigation, onFocusAction: () => refreshData() });
 
+    const versionFile = Utility.GetVersionData()?.versionFile;
+    const isIOS = Utility.IsIOS();
+    const platformLabel = isIOS ? 'iOS' : 'Android';
+    const platformVersionInfo = isIOS ? versionFile?.ios : versionFile?.android;
+    const platformOsVersion = typeof Platform.Version === 'string'
+        ? Platform.Version
+        : `${Platform.Version}`;
+    const appMode = __DEV__ ? 'Debug' : 'Produzione';
+    const normalizeVersion = (value?: string) => value && value !== '0' ? value : 'n/d';
+
     return (
         <ScrollView contentContainerStyle={[GlobalStyles.container, styles.form]}>
             <View style={styles.field}>
@@ -99,6 +111,32 @@ const ProfileScreen = ({ navigation, route }: any) => {
                 />
                 <FormErrorMessageComponent text='Campo obbligatorio' field='email' validationArray={validationErrors} />
             </View>
+
+            <View style={styles.infoSection}>
+                <Text style={styles.infoSectionTitle}>Info applicazione</Text>
+                <View style={styles.infoCard}>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Versione {platformLabel}</Text>
+                        <Text style={styles.infoValue}>{appVersion}</Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Versione OS</Text>
+                        <Text style={styles.infoValue}>{platformOsVersion}</Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Modalità app</Text>
+                        <Text style={styles.infoValue}>{appMode}</Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Ultima versione disponibile</Text>
+                        <Text style={styles.infoValue}>{normalizeVersion(platformVersionInfo?.latest_version)}</Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Versione minima supportata</Text>
+                        <Text style={styles.infoValue}>{normalizeVersion(platformVersionInfo?.min_supported_version)}</Text>
+                    </View>
+                </View>
+            </View>
         </ScrollView>
     )
 };
@@ -115,6 +153,44 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginBottom: 6,
         color: ThemeColors.black,
+    },
+    infoSection: {
+        marginTop: 24,
+        marginBottom: 16,
+    },
+    infoSectionTitle: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: ThemeColors.black,
+        marginBottom: 10,
+    },
+    infoCard: {
+        borderWidth: 1,
+        borderColor: '#d1d5db',
+        borderRadius: 16,
+        backgroundColor: '#f8f9fb',
+        overflow: 'hidden',
+    },
+    infoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 14,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e7eb',
+    },
+    infoLabel: {
+        fontSize: 13,
+        color: '#4b5563',
+        flex: 1,
+        marginRight: 12,
+    },
+    infoValue: {
+        fontSize: 13,
+        color: ThemeColors.black,
+        fontWeight: '600',
+        textAlign: 'right',
     },
 });
 

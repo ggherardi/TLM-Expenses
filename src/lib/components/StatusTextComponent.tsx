@@ -38,9 +38,9 @@ export const StatusTextComponent = (props: IStatusTextProps) => {
   }
   return (
     <>
-      <Text style={[styles.container, { backgroundColor: backgroundColor, color: textColor, borderWidth: backgroundColor == ThemeColors.white ? 0.5 : 0 }]}>{text.toUpperCase()}</Text>
+      <Text allowFontScaling={false} style={[styles.container, { backgroundColor: backgroundColor, color: textColor, borderWidth: backgroundColor == ThemeColors.white ? 0.5 : 0 }]}>{text.toUpperCase()}</Text>
       {!props.event.sentToCompany ? (
-        <Text style={[styles.remaingDaysText]}>{daysToEventEnd >= 0 ? daysToEventEnd : 0} {remainingDaysText}</Text>) 
+        <Text allowFontScaling={false} style={[styles.remaingDaysText]}>{daysToEventEnd >= 0 ? daysToEventEnd : 0} {remainingDaysText}</Text>) 
         : (<></>)}
     </>);
 };

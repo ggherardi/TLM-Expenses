@@ -72,7 +72,7 @@ export const ExpenseDataRowComponent = ({ expense: expense, event, onDelete, ind
                 <Pressable key={`${index}`} onPress={goToExpense} style={({ pressed }) => [
                     styles.container, { opacity: pressed ? 1 : 1, borderBottomWidth: 1, borderTopWidth: index == 0 ? 1 : 0, borderColor: ThemeColors.lightGray }]}>
                     <View style={styles.row}>
-                        <Text style={[styles.day]}>{Utility.FormatDateDDMMYYYY(expense.date)}</Text>
+                        <Text allowFontScaling={false} style={[styles.day]}>{Utility.FormatDateDDMMYYYY(expense.date)}</Text>
                     </View>
                     <View style={[styles.row, GlobalStyles.pt5]}>
                         <View style={[styles.expenseImageContainer]}>
@@ -87,15 +87,15 @@ export const ExpenseDataRowComponent = ({ expense: expense, event, onDelete, ind
                         <View style={[styles.expenseNameContainer]}>
                             {expense.description != undefined && expense.description.length ? (
                                 <View style={styles.expenseNameContainer}>
-                                    <Text style={[styles.expenseName]}>{expense.name}</Text>
-                                    <Text style={[styles.expenseDescription]} numberOfLines={1}>{expense.description}</Text>
+                                    <Text allowFontScaling={false} style={[styles.expenseName]} numberOfLines={2} ellipsizeMode="tail">{expense.name}</Text>
+                                    <Text allowFontScaling={false} style={[styles.expenseDescription]} numberOfLines={1}>{expense.description}</Text>
                                 </View>
                             ) : (
-                                <Text style={[styles.expenseName]}>{expense.name}</Text>
+                                <Text allowFontScaling={false} style={[styles.expenseName]} numberOfLines={2} ellipsizeMode="tail">{expense.name}</Text>
                             )}
                         </View>
                         <View style={[styles.expenseAmountContainer]}>
-                            <Text style={{ fontSize: 15 }}>{expense.amount.toFixed(2)} {event.mainCurrency?.symbol}</Text>
+                            <Text allowFontScaling={false} style={styles.expenseAmount}>{expense.amount.toFixed(2)} {event.mainCurrency?.symbol}</Text>
                         </View>
                     </View>
                 </Pressable>
@@ -106,9 +106,7 @@ export const ExpenseDataRowComponent = ({ expense: expense, event, onDelete, ind
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexWrap: 'wrap',
-        maxWidth: '100%',
+        width: '100%',
         paddingHorizontal: 5,
         paddingVertical: 10,
         backgroundColor: ThemeColors.white
@@ -119,16 +117,26 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start'
     },
     expenseImageContainer: {
-        flex: 3,
+        width: 50,
+        flexShrink: 0,
         justifyContent: 'center'
     },
     expenseNameContainer: {
-        flex: 8,
+        flex: 1,
+        minWidth: 0,
+        paddingRight: 8,
         justifyContent: 'center',
     },
     expenseAmountContainer: {
-        flex: 3,
+        width: 100,
+        flexShrink: 0,
+        alignItems: 'flex-end',
         justifyContent: 'center'
+    },
+    expenseAmount: {
+        fontSize: 15,
+        color: ThemeColors.black,
+        textAlign: 'right',
     },
     day: {
         alignSelf: 'center',
@@ -189,5 +197,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        width: '100%',
     },
 });

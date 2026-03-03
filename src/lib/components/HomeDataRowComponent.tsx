@@ -109,21 +109,21 @@ export const HomeDataRowComponent = ({ event, onDelete, index, navigation }: IHo
                 <Pressable key={`pressable_${event.name}_${index}_${Utility.GenerateRandomGuid()}`} onPress={goToEvent} style={({ pressed }) => [
                         styles.container, { backgroundColor: pressed ? ThemeColors.selected : ThemeColors.white, borderTopWidth: index == 0 ? 1 : 0, borderBottomWidth: 1, borderColor: ThemeColors.lightGray }]}>
                     <Row>
-                        <Text style={[styles.day]}>{Utility.FormatDateDDMM(event.startDate)} - {Utility.FormatDateDDMM(event.endDate)}</Text>
+                        <Text allowFontScaling={false} style={[styles.day]}>{Utility.FormatDateDDMM(event.startDate)} - {Utility.FormatDateDDMM(event.endDate)}</Text>
                         <StatusTextComponent event={stateEvent} />
                     </Row>
                     <Row>
                         <VStack style={styles.eventNameContainer}>
-                            <Text style={[styles.eventName]}>{event.name}</Text>
-                            <Text style={[styles.eventDescription]} numberOfLines={1}>{event.city}: {eventTotalDays} giorn{eventTotalDays > 1 ? 'i' : 'o'}</Text>
+                            <Text allowFontScaling={false} style={[styles.eventName]} numberOfLines={1} ellipsizeMode="tail">{event.name}</Text>
+                            <Text allowFontScaling={false} style={[styles.eventDescription]} numberOfLines={1}>{event.city}: {eventTotalDays} giorn{eventTotalDays > 1 ? 'i' : 'o'}</Text>
                         </VStack>
                         <VStack style={styles.totalAmountContainer}>
                             {stateEvent.sentToCompany ? (
-                                <Text style={[styles.totalAmountText, { color: totalAmount >= 0 ? ThemeColors.green : ThemeColors.danger }]}>{totalAmount >= 0 ? "rimborso" : "rimborso"}</Text>
+                                <Text allowFontScaling={false} style={[styles.totalAmountText, { color: totalAmount >= 0 ? ThemeColors.green : ThemeColors.danger }]}>{totalAmount >= 0 ? "rimborso" : "rimborso"}</Text>
                             ) : (
-                                <Text style={[styles.totalAmountText, { color: totalAmount >= 0 ? ThemeColors.green : ThemeColors.danger }]}>{totalAmount >= 0 ? "devi ricevere" : "devi restituire"}</Text>
+                                <Text allowFontScaling={false} style={[styles.totalAmountText, { color: totalAmount >= 0 ? ThemeColors.green : ThemeColors.danger }]}>{totalAmount >= 0 ? "devi ricevere" : "devi restituire"}</Text>
                             )}
-                            <Text style={[styles.totalAmountText, { color: totalAmount >= 0 ? ThemeColors.green : ThemeColors.danger }]}>{Math.abs(totalAmount).toFixed(2)} {event.mainCurrency.symbol}</Text>
+                            <Text allowFontScaling={false} style={[styles.totalAmountText, { color: totalAmount >= 0 ? ThemeColors.green : ThemeColors.danger }]}>{Math.abs(totalAmount).toFixed(2)} {event.mainCurrency.symbol}</Text>
                         </VStack>
                     </Row>
                 </Pressable>
@@ -134,9 +134,7 @@ export const HomeDataRowComponent = ({ event, onDelete, index, navigation }: IHo
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexWrap: 'wrap',
-        maxWidth: '100%',
+        width: '100%',
         paddingHorizontal: 5,
         paddingVertical: 10,
         backgroundColor: ThemeColors.white
@@ -149,12 +147,15 @@ const styles = StyleSheet.create({
         flex: 1
     },
     eventNameContainer: {
-        flex: 7,
-        // paddingLeft: 10,
+        flex: 1,
+        minWidth: 0,
+        paddingRight: 8,
     },
     totalAmountContainer: {
         justifyContent: 'center',
-        flex: 3
+        alignItems: 'flex-end',
+        width: 120,
+        flexShrink: 0
     },
     totalAmountText: {
         textAlign: 'right',
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     eventDescription: {
-
+        color: ThemeColors.black
     },
     swipedRow: {
         flexDirection: 'row',
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        width: '100%',
     },
     column: {
         flexDirection: 'column',

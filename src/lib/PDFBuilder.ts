@@ -26,7 +26,7 @@ export const PDFBuilder = {
         let file = await generatePDF(options).catch(e => console.log("Error while creating pdf: ", e));
         if (file) {
           console.log(`File created: `, file.filePath);
-          // await PDFBuilder.addWatermarkToPages(file);
+          await PDFBuilder.addWatermarkToPages(file);
           resolve(file);
         } else {
           reject(undefined);

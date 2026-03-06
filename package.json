@@ -1,6 +1,6 @@
 {
   "name": "tlm_react_native_ios",
-  "version": "2.1",
+  "version": "2.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
